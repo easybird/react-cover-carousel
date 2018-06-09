@@ -7,8 +7,10 @@
   "scripts": {
     "build": "rollup -c rollup.config.babel.js",
     "watch": "rollup -c rollup.config.babel.js -w",
+    "preinstall": "cd \"./examples\" && npm install",
     "examples:build": "cd \"./examples\" && \"./node_modules/.bin/webpack\"",
     "examples:watch": "cd \"./examples\" && \"./node_modules/.bin/webpack-dev-server\"",
+    "examples:deploy": "npm run build && npm run examples:build",
     "start": "(npm run watch & npm run examples:watch)",
     "precommit": "npm run build && npm run examples:build",
     "test": "jest --no-cache"
