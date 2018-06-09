@@ -1,6 +1,7 @@
 import path from 'path';
 import express from 'express';
 import webpack from 'webpack';
+import CopyWebpackPlugin from 'copy-webpack-plugin';
 
 export default {
   entry: {
@@ -10,7 +11,7 @@ export default {
 
   output: {
     filename: '[name].bundle.js',
-    path: path.resolve(__dirname, './bundle/')
+    path: path.resolve(__dirname, './public/bundle/')
   },
 
   module: {
@@ -42,11 +43,12 @@ export default {
   plugins: [
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify('development')
-    })
+    }),
+    new CopyWebpackPlugin([{ from: path.resolve(__dirname, '../build/*')}])
   ],
 
   devServer: {
-    contentBase: './',
+    contentBase: './public',
     publicPath: '/build',
     port: 8080,
     before(app, server) {
