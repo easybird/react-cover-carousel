@@ -10,7 +10,7 @@ const Application = () => (
   <Fragment>
     <div id="sidebar">
       <ul>
-        <li><a href="#react_cover_carousel" className="link">ReactCoverCarousel</a></li>
+        <li><a href="/#react_cover_carousel" className="link">ReactCoverCarousel</a></li>
       </ul>
     </div>
     <iframe src="./react_cover_carousel.html" />

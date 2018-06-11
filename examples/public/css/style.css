@@ -1,15 +1,12 @@
 @import url('https://fonts.googleapis.com/css?family=Oxygen');
 
 body {
-  background: #F0CA4D;
   margin: 0;
   padding: 0;
 }
 
 .centered {
-  position: absolute;
-  left: calc(50% - 15px);
-  top: 30%;
+  padding-top: 100px;
 }
 
 #sidebar {
@@ -24,6 +21,10 @@ body {
   bottom: 0;
 }
 
+h1 {
+  text-align: center
+}
+
 #sidebar ul {
   padding: 0;
   list-style: none;
@@ -31,18 +32,12 @@ body {
 }
 
 #sidebar li {
-  background: #F0CA4D;
   padding: 5px 10px;
   border-radius: 5px;
   transition: all 0.3s linear;
 }
 
-#sidebar li:hover {
-  background: #f0b64d;
-}
-
 #sidebar a {
-  color: white;
   text-decoration: none;
   font-family: 'Oxygen', sans-serif;
   font-size: 16pt;
@@ -55,7 +50,6 @@ body {
   text-shadow: 1px 1px rgba(0,0,0,0.2);
   vertical-align: text-bottom;
   display: inline;
-  color: #eee;
   font-size: 10pt;
   padding-right: 10px;
 }
@@ -63,7 +57,6 @@ body {
 #sidebar a:after {
   content: " (class)";
   text-shadow: 0.5px 0.5px #aaa;
-  color: #333333;
   font-size: 12pt;
   padding-left: 10px;
 }
