@@ -5,11 +5,11 @@
   "main": "build/react-cover-carousel.js",
   "module": "build/react-cover-carousel.module.js",
   "scripts": {
-    "build": "rollup -c rollup.config.babel.js",
-    "watch": "rollup -c rollup.config.babel.js -w",
+    "build": "rollup -c rollup.config.babel.js --environment BUILD:production",
+    "watch": "rollup -c rollup.config.babel.js -w --environment BUILD:development",
     "preinstall": "cd \"./examples\" && npm install",
-    "examples:build": "cd \"./examples\" && \"./node_modules/.bin/webpack\"",
-    "examples:watch": "cd \"./examples\" && \"./node_modules/.bin/webpack-dev-server\"",
+    "examples:build": "cd \"./examples\" && webpack --mode production",
+    "examples:watch": "cd \"./examples\" && webpack-dev-server --mode development --watch",
     "examples:deploy": "npm run build && npm run examples:build",
     "start": "(npm run watch & npm run examples:watch)",
     "precommit": "npm run build && npm run examples:build",
@@ -52,6 +52,7 @@
     "url-loader": "^1.0.1"
   },
   "dependencies": {
+    "radium": "^0.24.0",
     "react": "^16.4.0",
     "react-dom": "^16.4.0"
   }

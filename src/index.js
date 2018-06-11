@@ -1,1 +1,1 @@
-export * from './ReactCoverCarousel';
+export { default as ReactCoverCarousel } from './ReactCoverCarousel';

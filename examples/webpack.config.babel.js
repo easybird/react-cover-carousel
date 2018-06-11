@@ -3,15 +3,18 @@ import express from 'express';
 import webpack from 'webpack';
 import CopyWebpackPlugin from 'copy-webpack-plugin';
 
-export default {
+
+export default (env, argv) => {
+  return({
   entry: {
     index: './src/index.js',
     react_cover_carousel: './src/react_cover_carousel.js',
+
   },
 
   output: {
     filename: '[name].bundle.js',
-    path: path.resolve(__dirname, './public/bundle/')
+    path: path.resolve(__dirname, './public/bundle/'),
   },
 
   module: {
@@ -42,7 +45,7 @@ export default {
 
   plugins: [
     new webpack.DefinePlugin({
-      'process.env.NODE_ENV': JSON.stringify('development')
+      'process.env.NODE_ENV': JSON.stringify(argv.mode || 'production'),
     }),
     new CopyWebpackPlugin([{ from: path.resolve(__dirname, '../build/*')}])
   ],
@@ -55,4 +58,4 @@ export default {
       app.use('/build', express.static(path.resolve(__dirname, '../build/')))
     }
   }
-};
+})};
