@@ -1,0 +1,11 @@
+<ReactCoverCarousel
+    width={550}
+    height={300}
+    displayQuantityOfSide={2}
+    navigation={true}
+    enableHeading={true}
+    activeImageIndex={3}
+    otherFigureRotation={0}
+>
+    {images}
+</ReactCoverCarousel>

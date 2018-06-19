@@ -1,72 +1,80 @@
 @import url('https://fonts.googleapis.com/css?family=Oxygen');
-
 body {
   margin: 0;
   padding: 0;
+  font-family: 'Oxygen', sans-serif;
 }
 
-.centered {
-  padding-top: 100px;
-}
-
-#sidebar {
-  background: transparent;
-  position: fixed;
+#app {
   width: 100%;
-  height: 120px;
-  left: 0;
-  padding: 50px 60px;
-  /* border-top: 6px solid #3e3e3e0d; */
-  z-index: 1;
-  bottom: 0;
 }
 
-h1 {
+#header {
+  background: black;
+  color: white;
+  padding: 0em 5em;
+  border-bottom: 6px solid #3e3e3e0d;
+  z-index: 1;
+}
+
+.menu {
+  display: flex;
+  justify-content: space-between;
+}
+
+h1, h2, h3, h4 {
   text-align: center
 }
 
-#sidebar ul {
-  padding: 0;
-  list-style: none;
-  width: 230px;
+#header h2 {
+  padding-top: 1em;
+  padding-bottom: 1em;
+  margin: 0;
 }
 
-#sidebar li {
+#header h3 {
+  margin: 0;
+}
+
+#header ul {
+  padding: 0;
+  list-style: none;
+}
+
+#header li {
+  flex: 1;
   padding: 5px 10px;
-  border-radius: 5px;
   transition: all 0.3s linear;
 }
 
-#sidebar a {
+#header a {
   text-decoration: none;
-  font-family: 'Oxygen', sans-serif;
-  font-size: 16pt;
+  color: white;
   line-height: 2;
   letter-spacing: 0.3px;
 }
 
-#sidebar a:before {
-  content: "[/]";
-  text-shadow: 1px 1px rgba(0,0,0,0.2);
-  vertical-align: text-bottom;
-  display: inline;
-  font-size: 10pt;
-  padding-right: 10px;
-}
-
-#sidebar a:after {
-  content: " (class)";
-  text-shadow: 0.5px 0.5px #aaa;
-  font-size: 12pt;
-  padding-left: 10px;
+.iframeDiv {
+  height: calc(100% - 100px);
+  width: 100%;
 }
 
 iframe {
   border: none;
-  position: fixed;
-  top: 0;
-  right: 0;
-  left: 0;
-  height: calc(100% - 220px);
+  position: absolute;
   width: 100%;
+  height: 100%;
+}
+
+.playground {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap
+}
+
+.playgroundCode {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3em;
 }

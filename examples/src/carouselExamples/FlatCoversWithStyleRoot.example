@@ -1,0 +1,25 @@
+<StyleRoot>
+    <ReactCoverCarousel
+        media={{
+        backgroundColor: 'white',
+        '@media (max-width: 900px)': {
+            height: '300px',
+            width: '600px',
+        },
+        '@media (min-width: 900px)': {
+            height: '400px',
+            width: '1300px',
+        },
+        }}
+        displayQuantityOfSide={2}
+        infiniteScroll={true}
+        navigation={true}
+        enableHeading={false}
+        activeImageIndex={0}
+        otherFigureRotation={0}
+        currentFigureScale={2.5}
+        otherFigureScale={0.9}
+    >
+        {images}
+    </ReactCoverCarousel>
+</StyleRoot>
