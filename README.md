@@ -2,6 +2,8 @@
 
 ![Demo](https://gfycat.com/KlutzyJointIberianmole)
 
+<iframe src='https://gfycat.com/ifr/KlutzyJointIberianmole' frameborder='0' scrolling='no' width='1858' height='938' allowfullscreen></iframe>
+
 Here you can find some examples of the React Cover Carousel, with which you can play online:
 [Examples](https://tender-kepler-8e3244.netlify.com/)
 
