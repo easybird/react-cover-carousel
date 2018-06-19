@@ -3,11 +3,11 @@
         media={{
         backgroundColor: 'white',
         '@media (max-width: 900px)': {
-            height: '300px',
+            height: '600px',
             width: '600px',
         },
         '@media (min-width: 900px)': {
-            height: '400px',
+            height: '700px',
             width: '1300px',
         },
         }}
@@ -17,7 +17,7 @@
         enableHeading={false}
         activeImageIndex={0}
         otherFigureRotation={0}
-        currentFigureScale={2.5}
+        currentFigureScale={2}
         otherFigureScale={0.9}
     >
         {images}
