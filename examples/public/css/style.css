@@ -54,6 +54,21 @@ h1, h2, h3, h4 {
   letter-spacing: 0.3px;
 }
 
+.intro {
+  display: flex;
+  align-self: center;
+  margin: 0 auto;
+  width: 80%;
+}
+
+.intro a {
+  color: black;
+}
+
+.intro h4 {
+  text-align: center
+}
+
 .iframeDiv {
   height: calc(100% - 100px);
   width: 100%;

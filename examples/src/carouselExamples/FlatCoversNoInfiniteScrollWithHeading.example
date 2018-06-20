@@ -6,6 +6,7 @@
     enableHeading={true}
     activeImageIndex={3}
     otherFigureRotation={0}
+    transitionSpeed={300}
 >
     {images}
 </ReactCoverCarousel>

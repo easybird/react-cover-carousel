@@ -1,6 +1,6 @@
 <StyleRoot>
     <ReactCoverCarousel
-        media={{
+        mediaQueries={{
         backgroundColor: 'white',
         '@media (max-width: 900px)': {
             height: '600px',

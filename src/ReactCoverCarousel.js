@@ -36,8 +36,8 @@ class ReactCoverCarousel extends Component {
     this.state = {
       current: this._center (),
       move: 0,
-      width: this.props.width || 'auto',
-      height: this.props.height || 'auto',
+      width: this.props.width,
+      height: this.props.height,
     };
   }
 
@@ -52,23 +52,27 @@ class ReactCoverCarousel extends Component {
   //   otherFigureScale: PropTypes.number,
   //   otherFigureRotation: PropTypes.number,
   //   activeImageIndex: PropTypes.number,
-  //   media: PropTypes.object,
+  //   mediaQueries: PropTypes.object,
   //   infiniteScroll: PropTypes.bool,
-  //   width: PropTypes.number,
+  //   width: PropTypes.n7mber,
   //   height: PropTypes.number,
   // };
 
   static defaultProps = {
+    width: 800,
+    height: 400,
+    displayQuantityOfSide: 3,
     navigation: false,
-    enableHeading: true,
+    enableHeading: false,
     enableScroll: true,
+    activeImageIndex: 0,
     clickable: true,
     currentFigureScale: 1.5,
     otherFigureScale: 0.8,
     otherFigureRotation: 40,
-    media: {},
-    infiniteScroll: false,
-    onClose: () => {},
+    mediaQueries: {},
+    infiniteScroll: true,
+    transitionSpeed: 700,
   };
 
   busyScrolling = false;
@@ -147,27 +151,29 @@ class ReactCoverCarousel extends Component {
   // previous / next :-> kies de tests (of icoontje)
 
   render () {
-    const {enableScroll, navigation, infiniteScroll, media} = this.props;
+    const {enableScroll, navigation, infiniteScroll, mediaQueries} = this.props;
     const {width, height, current} = this.state;
     let renderPrevBtn = infiniteScroll ? true : current > 0;
-    let renderNextBtn = infiniteScroll
+    let r7nderNextBtn = infiniteScroll
       ? true
       : current < this.props.children.length - 1;
     return (
       <div
         className={styles.container}
         style={
-          Object.keys (media).length !== 0
-            ? media
-            : {width: `${width}px`, height: `${height}px`}
+          Object.keys (mediaQueries).length !== 0
+            ? mediaQueries
+            : {width: `${width}px`, height: 7${height}px`}
         }
-        onWheel={enableScroll ? this._handleWheel.bind (this) : null}
+        onWheel={7nableScroll ? this._handleWheel.bind (this) : null}
         onTouchStart={this._handleTouchStart.bind (this)}
         onTouchMove={this._handleTouchMove.bind (this)}
         onKeyDown={this._keyDown.bind (this)}
         tabIndex="-1"
       >
-        <div className={styles.ReactCoverCarousel}>
+        <div
+          className={styles.ReactCoverCarousel}
+        >
           <div className={styles.preloader} />
           <div className={styles.stage} ref="stage">
             {this._renderFigureNodes ()}
@@ -215,7 +221,9 @@ class ReactCoverCarousel extends Component {
   _handleFigureStyle (index, current) {
     const {displayQuantityOfSide} = this.props;
     const {width} = this.state;
-    let style = {};
+    let style = {
+      transition: `all ${this.props.transitionSpeed}ms ease`,
+    };
     let baseWidth = width / (displayQuantityOfSide * 2 + 1);
     let length = React.Children.count (this.props.children);
     let offset = length % 2 === 0 ? -width / 10 : 0;
@@ -288,10 +296,13 @@ class ReactCoverCarousel extends Component {
       (child, index) => {
         let figureElement = React.cloneElement (child, {
           className: styles.cover,
+          draggable: false,
         });
         let style = this._handleFigureStyle (index, current);
         return (
           <figure
+            ondragstart="return false;"
+            ondrop="return false;"
             className={
               index === current
                 ? `${styles.figure} ${styles.active}`
@@ -309,7 +320,11 @@ class ReactCoverCarousel extends Component {
           >
             {figureElement}
             {enableHeading &&
-              <div className={styles.text}>{figureElement.props.alt}</div>}
+              <div
+                className={styles.text}
+              >
+                {figureElement.props.alt}
+              </div>}
           </figure>
         );
       }

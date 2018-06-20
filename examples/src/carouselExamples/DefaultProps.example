@@ -1,0 +1,18 @@
+<ReactCoverCarousel
+    width={800}
+    height={400}
+    displayQuantityOfSide={3}
+    navigation={false}
+    enableHeading={false}
+    enableScroll={true}
+    activeImageIndex={0}
+    clickable={true}
+    currentFigureScale={1.5}
+    otherFigureScale={0.8}
+    otherFigureRotation={40}
+    mediaQueries={{}}
+    infiniteScroll={true}
+    transitionSpeed={700}
+>
+    {images}
+</ReactCoverCarousel>

@@ -5734,12 +5734,15 @@
 
         var figureNodes = React__default.Children.map(_this.props.children, function (child, index) {
           var figureElement = React__default.cloneElement(child, {
-            className: styles.cover
+            className: styles.cover,
+            draggable: false
           });
           var style = _this._handleFigureStyle(index, current);
           return React__default.createElement(
             'figure',
             {
+              ondragstart: 'return false;',
+              ondrop: 'return false;',
               className: index === current ? styles.figure + ' ' + styles.active : styles.figure,
               key: index,
               onClick: function onClick(e) {
@@ -5751,7 +5754,9 @@
             figureElement,
             enableHeading && React__default.createElement(
               'div',
-              { className: styles.text },
+              {
+                className: styles.text
+              },
               figureElement.props.alt
             )
           );
@@ -5814,8 +5819,8 @@
       _this.state = {
         current: _this._center(),
         move: 0,
-        width: _this.props.width || 'auto',
-        height: _this.props.height || 'auto'
+        width: _this.props.width,
+        height: _this.props.height
       };
       return _this;
     }
@@ -5831,7 +5836,7 @@
     //   otherFigureScale: PropTypes.number,
     //   otherFigureRotation: PropTypes.number,
     //   activeImageIndex: PropTypes.number,
-    //   media: PropTypes.object,
+    //   mediaQueries: PropTypes.object,
     //   infiniteScroll: PropTypes.bool,
     //   width: PropTypes.number,
     //   height: PropTypes.number,
@@ -5926,7 +5931,7 @@
             enableScroll = _props2.enableScroll,
             navigation = _props2.navigation,
             infiniteScroll = _props2.infiniteScroll,
-            media = _props2.media;
+            mediaQueries = _props2.mediaQueries;
         var _state = this.state,
             width = _state.width,
             height = _state.height,
@@ -5938,7 +5943,7 @@
           'div',
           {
             className: styles.container,
-            style: Object.keys(media).length !== 0 ? media : { width: width + 'px', height: height + 'px' },
+            style: Object.keys(mediaQueries).length !== 0 ? mediaQueries : { width: width + 'px', height: height + 'px' },
             onWheel: enableScroll ? this._handleWheel.bind(this) : null,
             onTouchStart: this._handleTouchStart.bind(this),
             onTouchMove: this._handleTouchMove.bind(this),
@@ -5947,7 +5952,9 @@
           },
           React__default.createElement(
             'div',
-            { className: styles.ReactCoverCarousel },
+            {
+              className: styles.ReactCoverCarousel
+            },
             React__default.createElement('div', { className: styles.preloader }),
             React__default.createElement(
               'div',
@@ -6009,7 +6016,9 @@
         var displayQuantityOfSide = this.props.displayQuantityOfSide;
         var width = this.state.width;
 
-        var style = {};
+        var style = {
+          transition: 'all ' + this.props.transitionSpeed + 'ms ease'
+        };
         var baseWidth = width / (displayQuantityOfSide * 2 + 1);
         var length = React__default.Children.count(this.props.children);
         var offset = length % 2 === 0 ? -width / 10 : 0;
@@ -6114,16 +6123,20 @@
   }(React.Component);
 
   ReactCoverCarousel.defaultProps = {
+    width: 800,
+    height: 400,
+    displayQuantityOfSide: 3,
     navigation: false,
-    enableHeading: true,
+    enableHeading: false,
     enableScroll: true,
+    activeImageIndex: 0,
     clickable: true,
     currentFigureScale: 1.5,
     otherFigureScale: 0.8,
     otherFigureRotation: 40,
-    media: {},
-    infiniteScroll: false,
-    onClose: function onClose() {}
+    mediaQueries: {},
+    infiniteScroll: true,
+    transitionSpeed: 500
   };
 
 
