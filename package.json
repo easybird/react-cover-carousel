@@ -10,7 +10,7 @@
     "preinstall": "cd \"./examples\" && npm install",
     "examples:build": "cd \"./examples\" && \"./node_modules/.bin/webpack\" --mode production",
     "examples:watch": "cd \"./examples\" && \"./node_modules/.bin/webpack-dev-server\" --mode development --watch",
-    "examples:deploy": "npm run build && npm run examples:build",
+    "examples:deploy": "npm run preinstall && npm run build && npm run examples:build",
     "start": "(npm run watch & npm run examples:watch)",
     "precommit": "npm run build && npm run examples:build",
     "test": "jest --no-cache"
