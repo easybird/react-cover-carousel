@@ -154,7 +154,7 @@ class ReactCoverCarousel extends Component {
     const {enableScroll, navigation, infiniteScroll, mediaQueries} = this.props;
     const {width, height, current} = this.state;
     let renderPrevBtn = infiniteScroll ? true : current > 0;
-    let r7nderNextBtn = infiniteScroll
+    let renderNextBtn = infiniteScroll
       ? true
       : current < this.props.children.length - 1;
     return (
@@ -163,9 +163,9 @@ class ReactCoverCarousel extends Component {
         style={
           Object.keys (mediaQueries).length !== 0
             ? mediaQueries
-            : {width: `${width}px`, height: 7${height}px`}
+            : {width: `${width}px`, height: `${height}px`}
         }
-        onWheel={7nableScroll ? this._handleWheel.bind (this) : null}
+        onWheel={enableScroll ? this._handleWheel.bind (this) : null}
         onTouchStart={this._handleTouchStart.bind (this)}
         onTouchMove={this._handleTouchMove.bind (this)}
         onKeyDown={this._keyDown.bind (this)}
@@ -301,8 +301,6 @@ class ReactCoverCarousel extends Component {
         let style = this._handleFigureStyle (index, current);
         return (
           <figure
-            ondragstart="return false;"
-            ondrop="return false;"
             className={
               index === current
                 ? `${styles.figure} ${styles.active}`

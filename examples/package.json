@@ -24,6 +24,7 @@
     "component-playground": "^3.2.0",
     "font-awesome": "^4.7.0",
     "radium": "^0.24.0",
-    "react-fontawesome": "^1.6.1"
+    "react-fontawesome": "^1.6.1",
+    "react-modal": "^3.4.5"
   }
 }

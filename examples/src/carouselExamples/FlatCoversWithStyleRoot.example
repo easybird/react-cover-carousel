@@ -7,15 +7,15 @@
             width: '600px',
         },
         '@media (min-width: 900px)': {
-            height: '700px',
-            width: '1300px',
+            height: '800px',
         },
         }}
         displayQuantityOfSide={2}
         infiniteScroll={true}
         navigation={true}
         enableHeading={false}
-        activeImageIndex={0}
+        enableScroll={false}
+        activeImageIndex={3}
         otherFigureRotation={0}
         currentFigureScale={2}
         otherFigureScale={0.9}
