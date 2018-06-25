@@ -11,6 +11,9 @@
         },
         }}
         displayQuantityOfSide={2}
+        activeImageStyle={{
+            margin: '10em',
+        }}
         infiniteScroll={true}
         navigation={true}
         enableHeading={false}

@@ -6,6 +6,9 @@
     enableHeading={false}
     enableScroll={true}
     activeImageIndex={0}
+    activeImageStyle={{
+      margin: '5em',
+    }}
     clickable={true}
     currentFigureScale={1.5}
     otherFigureScale={0.8}

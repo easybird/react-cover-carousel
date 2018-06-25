@@ -41,23 +41,6 @@ class ReactCoverCarousel extends Component {
     };
   }
 
-  // static propTypes = {
-  //   children: PropTypes.node.isRequired,
-  //   displayQuantityOfSide: PropTypes.number.isRequired,
-  //   navigation: PropTypes.bool,
-  //   enableHeading: PropTypes.bool,
-  //   enableScroll: PropTypes.bool,
-  //   clickable: PropTypes.bool,
-  //   currentFigureScale: PropTypes.number,
-  //   otherFigureScale: PropTypes.number,
-  //   otherFigureRotation: PropTypes.number,
-  //   activeImageIndex: PropTypes.number,
-  //   mediaQueries: PropTypes.object,
-  //   infiniteScroll: PropTypes.bool,
-  //   width: PropTypes.n7mber,
-  //   height: PropTypes.number,
-  // };
-
   static defaultProps = {
     width: 800,
     height: 400,
@@ -66,6 +49,9 @@ class ReactCoverCarousel extends Component {
     enableHeading: false,
     enableScroll: true,
     activeImageIndex: 0,
+    activeImageStyle: {
+      margin: '5em',
+    },
     clickable: true,
     currentFigureScale: 1.5,
     otherFigureScale: 0.8,
@@ -125,7 +111,7 @@ class ReactCoverCarousel extends Component {
   }
 
   updateDimensions (activeImageIndex = this.props.activeImageIndex) {
-    const {displayQuantityOfSide, children} = this.props;
+    const {children} = this.props;
     let length = React.Children.count (children);
     let center = this._center ();
 
@@ -133,13 +119,11 @@ class ReactCoverCarousel extends Component {
     const height = ReactDOM.findDOMNode (this).offsetHeight;
 
     if (typeof activeImageIndex === 'number' && activeImageIndex < length) {
-      const baseWidth = width / (displayQuantityOfSide * 2 + 1);
-
       this.setState ({
         width,
         height,
         current: ~~activeImageIndex,
-        move: baseWidth * (center - activeImageIndex),
+        move: this.imageBaseWidth * (center - activeImageIndex),
       });
     } else {
       this.setState ({width, height});
@@ -147,16 +131,11 @@ class ReactCoverCarousel extends Component {
   }
 
   // shadow: al dan niet
-  // ruimte tussen foto's
   // previous / next :-> kies de tests (of icoontje)
 
   render () {
-    const {enableScroll, navigation, infiniteScroll, mediaQueries} = this.props;
-    const {width, height, current} = this.state;
-    let renderPrevBtn = infiniteScroll ? true : current > 0;
-    let renderNextBtn = infiniteScroll
-      ? true
-      : current < this.props.children.length - 1;
+    const {enableScroll, navigation, mediaQueries} = this.props;
+    const {width, height} = this.state;
     return (
       <div
         className={styles.container}
@@ -171,32 +150,12 @@ class ReactCoverCarousel extends Component {
         onKeyDown={this._keyDown.bind (this)}
         tabIndex="-1"
       >
-        <div
-          className={styles.ReactCoverCarousel}
-        >
+        <div className={styles.ReactCoverCarousel}>
           <div className={styles.preloader} />
           <div className={styles.stage} ref="stage">
             {this._renderFigureNodes ()}
           </div>
-          {navigation &&
-            <div className={styles.actions}>
-              {renderPrevBtn &&
-                <button
-                  type="button"
-                  className={styles.button}
-                  onClick={() => this._handlePrevFigure ()}
-                >
-                  Previous
-                </button>}
-              {renderNextBtn &&
-                <button
-                  type="button"
-                  className={styles.button}
-                  onClick={() => this._handleNextFigure ()}
-                >
-                  Next
-                </button>}
-            </div>}
+          {navigation && this._renderNavigation ()}
         </div>
       </div>
     );
@@ -218,47 +177,58 @@ class ReactCoverCarousel extends Component {
     }
   }
 
+  get imageBaseWidth () {
+    const totalNrOfVisibleImages = this.props.displayQuantityOfSide * 2 + 1
+    return this.state.width / totalNrOfVisibleImages;
+  }
+
+  _getOpacity (index, current) {
+    // Handle opacity
+    let depth = this.props.displayQuantityOfSide - Math.abs (current - index);
+
+    switch (depth) {
+      case 1:
+        return 0.95;
+      case 2:
+        return 0.92;
+      case 3:
+        return 0.9;
+      default:
+        return 0.5;
+    }
+  }
+
   _handleFigureStyle (index, current) {
-    const {displayQuantityOfSide} = this.props;
-    const {width} = this.state;
     let style = {
       transition: `all ${this.props.transitionSpeed}ms ease`,
+      width: `${this.imageBaseWidth}px`,
+      opacity: index === current ? 1: this._getOpacity (index, current),
+      zIndex: index === current? 10 : `${10 - Math.abs (index - current)}`,
     };
-    let baseWidth = width / (displayQuantityOfSide * 2 + 1);
     let length = React.Children.count (this.props.children);
-    let offset = length % 2 === 0 ? -width / 10 : 0;
-    // Handle opacity
-    let depth = displayQuantityOfSide - Math.abs (current - index);
-    let opacity = depth === 1 ? 0.95 : 0.5;
-    opacity = depth === 2 ? 0.92 : opacity;
-    opacity = depth === 3 ? 0.9 : opacity;
-    opacity = current === index ? 1 : opacity;
+    const oddNumberOfImages = length % 2 === 0;
+
+    let offset =  oddNumberOfImages ? - this.imageBaseWidth/2 : 0;
+
+    const translateX = `translateX(${this.state.move + offset}px)`
+
     // Handle translateX
     if (index === current) {
-      style['width'] = `${baseWidth}px`;
       style[
         'transform'
-      ] = `translateX(${this.state.move + offset}px)  scale(${this.props.currentFigureScale}`;
-      style['zIndex'] = 10;
-      style['opacity'] = opacity;
+      ] = `${translateX}  scale(${this.props.currentFigureScale}`;
     } else if (index < current) {
       // Left side
-      style['width'] = `${baseWidth}px`;
       style[
         'transform'
-      ] = `translateX(${this.state.move + offset}px) rotateY(${this.props.otherFigureRotation}deg) scale(${this.props.otherFigureScale}`;
-      style['zIndex'] = `${10 - Math.abs (index - current)}`;
-      style['opacity'] = opacity;
+      ] = `${translateX} rotateY(${this.props.otherFigureRotation}deg) scale(${this.props.otherFigureScale}`;
     } else if (index > current) {
       // Right side
-      style['width'] = `${baseWidth}px`;
       style[
         'transform'
-      ] = ` translateX(${this.state.move + offset}px) rotateY(-${this.props.otherFigureRotation}deg) scale(${this.props.otherFigureScale})`;
-      style['zIndex'] = `${10 - Math.abs (index - current)}`;
-      style['opacity'] = opacity;
+      ] = ` ${translateX} rotateY(-${this.props.otherFigureRotation}deg) scale(${this.props.otherFigureScale})`;
     }
-    return style;
+    return index === current ? {...style, ...this.props.activeImageStyle } : style;
   }
 
   _handleFigureClick = (index, action, e) => {
@@ -279,11 +249,8 @@ class ReactCoverCarousel extends Component {
     } else {
       // Move to the selected figure
       e.preventDefault ();
-      const {displayQuantityOfSide} = this.props;
-      const {width} = this.state;
-      let baseWidth = width / (displayQuantityOfSide * 2 + 1);
       let distance = this._center () - index;
-      let move = distance * baseWidth;
+      let move = distance * this.imageBaseWidth;
       this.setState ({current: index, move});
     }
   };
@@ -318,9 +285,7 @@ class ReactCoverCarousel extends Component {
           >
             {figureElement}
             {enableHeading &&
-              <div
-                className={styles.text}
-              >
+              <div className={styles.text}>
                 {figureElement.props.alt}
               </div>}
           </figure>
@@ -329,6 +294,35 @@ class ReactCoverCarousel extends Component {
     );
     return figureNodes;
   };
+
+  _renderNavigation () {
+    const {infiniteScroll, children} = this.props;
+    const {current} = this.state;
+
+    let renderPrevBtn = infiniteScroll || current > 0;
+    let renderNextBtn = infiniteScroll || current < children.length - 1;
+
+    return (
+      <div className={styles.actions}>
+        {renderPrevBtn &&
+          <button
+            type="button"
+            className={styles.button}
+            onClick={() => this._handlePrevFigure ()}
+          >
+            Previous
+          </button>}
+        {renderNextBtn &&
+          <button
+            type="button"
+            className={styles.button}
+            onClick={() => this._handleNextFigure ()}
+          >
+            Next
+          </button>}
+      </div>
+    );
+  }
 
   _removePointerEvents () {
     this.refs.stage.style['pointerEvents'] = 'auto';
@@ -344,14 +338,12 @@ class ReactCoverCarousel extends Component {
 
   _handlePrevFigure = () => {
     console.log ('_handlePrevFigure');
-    const {displayQuantityOfSide, infiniteScroll} = this.props;
-    const {width} = this.state;
+    const {infiniteScroll} = this.props;
     let {current} = this.state;
-    let baseWidth = width / (displayQuantityOfSide * 2 + 1);
     let distance =
       this._center () -
       (current - 1 < 0 ? this.props.children.length - 1 : current - 1);
-    let move = distance * baseWidth;
+    let move = distance * this.imageBaseWidth;
 
     if (current - 1 >= 0) {
       this.setState ({current: current - 1, move});
@@ -365,14 +357,12 @@ class ReactCoverCarousel extends Component {
 
   _handleNextFigure = () => {
     console.log ('_handleNextFigure');
-    const {displayQuantityOfSide, infiniteScroll} = this.props;
-    const {width} = this.state;
+    const {infiniteScroll} = this.props;
     let {current} = this.state;
-    let baseWidth = width / (displayQuantityOfSide * 2 + 1);
     let distance =
       this._center () -
       (current + 1 >= this.props.children.length ? 0 : current + 1);
-    let move = distance * baseWidth;
+    let move = distance * this.imageBaseWidth;
 
     if (current + 1 < this.props.children.length) {
       this.setState ({current: current + 1, move});
@@ -422,17 +412,14 @@ class ReactCoverCarousel extends Component {
 
   _handleTouchMove (e) {
     e.preventDefault ();
-    const {displayQuantityOfSide} = this.props;
-    const {width} = this.state;
 
     let clientX = e.nativeEvent.touches[0].clientX;
     let lastX = TOUCH.lastX;
-    let baseWidth = width / (displayQuantityOfSide * 2 + 1);
     let move = clientX - lastX;
     let totalMove = TOUCH.lastMove - move;
     let sign = Math.abs (move) / move;
 
-    if (Math.abs (totalMove) >= baseWidth) {
+    if (Math.abs (totalMove) >= this.imageBaseWidth) {
       let fn = null;
       if (sign > 0) {
         fn = this._handlePrevFigure ();

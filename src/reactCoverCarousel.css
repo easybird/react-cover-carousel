@@ -42,10 +42,6 @@
   box-shadow: 6px 11px 35px rgba(0, 0, 0, 0.4);
 }
 
-.active {
-  margin: 100px;
-}
-
 .cover {
   display: block;
   width: 100%;
