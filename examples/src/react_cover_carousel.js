@@ -4,6 +4,7 @@ import {StyleRoot} from 'radium';
 import images from './data/images';
 import Playground from 'component-playground';
 import ReactModal from 'react-modal';
+import FontAwesome from 'react-fontawesome';
 
 const DefaultProps = require ('raw-loader!./carouselExamples/DefaultProps.example');
 const RotationCoversInfiniteScroll = require ('raw-loader!./carouselExamples/RotationCoversInfiniteScroll.example');
@@ -36,13 +37,13 @@ class ModalExample extends React.Component {
         <ReactModal
           style={{overlay: {zIndex: 1001}, content: { top: 0, left: 0, right: 0, bottom: 0}}}
           isOpen={this.state.showModal}
-          contentLabel="Minimal Modal Example"
+          contentLabel="Modal Example"
         >
           <button onClick={this.handleCloseModal}>Close Modal</button>
           <div className="component-documentation">
             <Playground
               codeText={FlatCoversWithStyleRoot}
-              scope={{React, images, ReactCoverCarousel, StyleRoot}}
+              scope={{React, images, ReactCoverCarousel, StyleRoot, FontAwesome}}
             />
           </div>
         </ReactModal>

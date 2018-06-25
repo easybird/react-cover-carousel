@@ -33,11 +33,12 @@ class ReactCoverCarousel extends Component {
    */
   constructor (props) {
     super (props);
+
     this.state = {
-      current: this._center (),
+      current: props.activeImageIndex || 0,
       move: 0,
-      width: this.props.width,
-      height: this.props.height,
+      width: props.width,
+      height: props.height,
     };
   }
 
@@ -64,7 +65,7 @@ class ReactCoverCarousel extends Component {
   busyScrolling = false;
 
   componentDidMount () {
-    this.updateDimensions ();
+    setTimeout (() => this.updateDimensions (this.props.activeImageIndex), 5);
     let length = React.Children.count (this.props.children);
 
     TRANSITIONS.forEach (event => {
@@ -110,7 +111,7 @@ class ReactCoverCarousel extends Component {
     }
   }
 
-  updateDimensions (activeImageIndex = this.props.activeImageIndex) {
+  updateDimensions (activeImageIndex) {
     const {children} = this.props;
     let length = React.Children.count (children);
     let center = this._center ();
@@ -118,15 +119,13 @@ class ReactCoverCarousel extends Component {
     const width = ReactDOM.findDOMNode (this).offsetWidth;
     const height = ReactDOM.findDOMNode (this).offsetHeight;
 
+    this.setState ({width, height});
+
     if (typeof activeImageIndex === 'number' && activeImageIndex < length) {
       this.setState ({
-        width,
-        height,
-        current: ~~activeImageIndex,
-        move: this.imageBaseWidth * (center - activeImageIndex),
+        current: activeImageIndex,
+        move: this._calculateMove (activeImageIndex),
       });
-    } else {
-      this.setState ({width, height});
     }
   }
 
@@ -178,7 +177,8 @@ class ReactCoverCarousel extends Component {
   }
 
   get imageBaseWidth () {
-    const totalNrOfVisibleImages = this.props.displayQuantityOfSide * 2 + 1
+    const totalNrOfVisibleImages = this.props.displayQuantityOfSide * 2 + 1;
+
     return this.state.width / totalNrOfVisibleImages;
   }
 
@@ -202,15 +202,15 @@ class ReactCoverCarousel extends Component {
     let style = {
       transition: `all ${this.props.transitionSpeed}ms ease`,
       width: `${this.imageBaseWidth}px`,
-      opacity: index === current ? 1: this._getOpacity (index, current),
-      zIndex: index === current? 10 : `${10 - Math.abs (index - current)}`,
+      opacity: index === current ? 1 : this._getOpacity (index, current),
+      zIndex: index === current ? 10 : `${10 - Math.abs (index - current)}`,
     };
     let length = React.Children.count (this.props.children);
     const oddNumberOfImages = length % 2 === 0;
 
-    let offset =  oddNumberOfImages ? - this.imageBaseWidth/2 : 0;
+    let offset = oddNumberOfImages ? -this.imageBaseWidth / 2 : 0;
 
-    const translateX = `translateX(${this.state.move + offset}px)`
+    const translateX = `translateX(${this.state.move + offset}px)`;
 
     // Handle translateX
     if (index === current) {
@@ -228,7 +228,9 @@ class ReactCoverCarousel extends Component {
         'transform'
       ] = ` ${translateX} rotateY(-${this.props.otherFigureRotation}deg) scale(${this.props.otherFigureScale})`;
     }
-    return index === current ? {...style, ...this.props.activeImageStyle } : style;
+    return index === current
+      ? {...style, ...this.props.activeImageStyle}
+      : style;
   }
 
   _handleFigureClick = (index, action, e) => {
@@ -249,10 +251,14 @@ class ReactCoverCarousel extends Component {
     } else {
       // Move to the selected figure
       e.preventDefault ();
-      let distance = this._center () - index;
-      let move = distance * this.imageBaseWidth;
-      this.setState ({current: index, move});
+
+      this.setState ({current: index, move: this._calculateMove (index)});
     }
+  };
+
+  _calculateMove = index => {
+    let distance = this._center () - index;
+    return distance * this.imageBaseWidth;
   };
 
   _renderFigureNodes = () => {
@@ -295,31 +301,65 @@ class ReactCoverCarousel extends Component {
     return figureNodes;
   };
 
-  _renderNavigation () {
-    const {infiniteScroll, children} = this.props;
+  _renderPreviousButton = () => {
+    const {infiniteScroll, PreviousButton} = this.props;
     const {current} = this.state;
 
     let renderPrevBtn = infiniteScroll || current > 0;
-    let renderNextBtn = infiniteScroll || current < children.length - 1;
+
+    if (!renderPrevBtn) {
+      return;
+    }
+
+    if (PreviousButton) {
+      return React.cloneElement (PreviousButton, {
+        onClick: () => this._handlePrevFigure (),
+      });
+    }
 
     return (
+      <button
+        type="button"
+        className={styles.button}
+        onClick={() => this._handlePrevFigure ()}
+      >
+        Previous
+      </button>
+    );
+  };
+
+  _renderNextButton = () => {
+    const {infiniteScroll, NextButton, children} = this.props;
+    const {current} = this.state;
+
+    let renderNextBtn = infiniteScroll || current < children.length - 1;
+
+    if (!renderNextBtn) {
+      return;
+    }
+
+    if (NextButton) {
+      return React.cloneElement (NextButton, {
+        onClick: () => this._handleNextFigure (),
+      });
+    }
+
+    return (
+      <button
+        type="button"
+        className={styles.button}
+        onClick={() => this._handleNextFigure ()}
+      >
+        Next
+      </button>
+    );
+  };
+
+  _renderNavigation () {
+    return (
       <div className={styles.actions}>
-        {renderPrevBtn &&
-          <button
-            type="button"
-            className={styles.button}
-            onClick={() => this._handlePrevFigure ()}
-          >
-            Previous
-          </button>}
-        {renderNextBtn &&
-          <button
-            type="button"
-            className={styles.button}
-            onClick={() => this._handleNextFigure ()}
-          >
-            Next
-          </button>}
+        {this._renderPreviousButton ()}
+        {this._renderNextButton ()}
       </div>
     );
   }
@@ -337,39 +377,39 @@ class ReactCoverCarousel extends Component {
   };
 
   _handlePrevFigure = () => {
-    console.log ('_handlePrevFigure');
     const {infiniteScroll} = this.props;
     let {current} = this.state;
-    let distance =
-      this._center () -
-      (current - 1 < 0 ? this.props.children.length - 1 : current - 1);
-    let move = distance * this.imageBaseWidth;
+
+    let newActiveImageIndex = null;
 
     if (current - 1 >= 0) {
-      this.setState ({current: current - 1, move});
-      TOUCH.lastMove = move;
+      
+      
+      newActiveImageIndex = current - 1;
+    } else if (current - 1 < 0 && infiniteScroll) {
+      newActiveImageIndex = this.props.children.length - 1;
     }
-    if (current - 1 < 0 && infiniteScroll) {
-      this.setState ({current: this.props.children.length - 1, move});
+    if (typeof newActiveImageIndex === 'number') {
+      const move = this._calculateMove (newActiveImageIndex);
+      this.setState ({current: newActiveImageIndex, move});
       TOUCH.lastMove = move;
     }
   };
 
   _handleNextFigure = () => {
-    console.log ('_handleNextFigure');
     const {infiniteScroll} = this.props;
     let {current} = this.state;
-    let distance =
-      this._center () -
-      (current + 1 >= this.props.children.length ? 0 : current + 1);
-    let move = distance * this.imageBaseWidth;
+
+    let newActiveImageIndex = null;
 
     if (current + 1 < this.props.children.length) {
-      this.setState ({current: current + 1, move});
-      TOUCH.lastMove = move;
+      newActiveImageIndex = current + 1;
+    } else if (current + 1 >= this.props.children.length && infiniteScroll) {
+      newActiveImageIndex = 0;
     }
-    if (current + 1 >= this.props.children.length && infiniteScroll) {
-      this.setState ({current: 0, move});
+    if (typeof newActiveImageIndex === 'number') {
+      const move = this._calculateMove (newActiveImageIndex);
+      this.setState ({current: newActiveImageIndex, move});
       TOUCH.lastMove = move;
     }
   };
