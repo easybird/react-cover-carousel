@@ -54,15 +54,17 @@ class ReactCoverCarousel extends Component {
       margin: '5em',
     },
     clickable: true,
-    currentFigureScale: 1.5,
+    activeFigureScale: 1.5,
     otherFigureScale: 0.8,
     otherFigureRotation: 40,
     mediaQueries: {},
     infiniteScroll: true,
     transitionSpeed: 700,
+    autoFocus: false
   };
 
   busyScrolling = false;
+  carouselDiv;
 
   componentDidMount () {
     setTimeout (() => this.updateDimensions (this.props.activeImageIndex), 5);
@@ -83,6 +85,7 @@ class ReactCoverCarousel extends Component {
     if (eventListener) {
       window.addEventListener ('resize', this.updateDimensions.bind (this));
     }
+    this.props.autoFocus && this.carouselDiv.focus()
   }
 
   componentWillReceiveProps (nextProps) {
@@ -148,6 +151,7 @@ class ReactCoverCarousel extends Component {
         onTouchMove={this._handleTouchMove.bind (this)}
         onKeyDown={this._keyDown.bind (this)}
         tabIndex="-1"
+        ref={(carouselDiv) => this.carouselDiv = carouselDiv}
       >
         <div className={styles.ReactCoverCarousel}>
           <div className={styles.preloader} />
@@ -216,7 +220,7 @@ class ReactCoverCarousel extends Component {
     if (index === current) {
       style[
         'transform'
-      ] = `${translateX}  scale(${this.props.currentFigureScale}`;
+      ] = `${translateX}  scale(${this.props.activeFigureScale}`;
     } else if (index < current) {
       // Left side
       style[

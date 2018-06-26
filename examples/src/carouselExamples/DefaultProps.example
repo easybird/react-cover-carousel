@@ -10,7 +10,7 @@
       margin: '5em',
     }}
     clickable={true}
-    currentFigureScale={1.5}
+    activeFigureScale={1.5}
     otherFigureScale={0.8}
     otherFigureRotation={40}
     mediaQueries={{}}

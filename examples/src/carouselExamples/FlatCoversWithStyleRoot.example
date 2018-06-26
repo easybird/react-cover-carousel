@@ -2,9 +2,9 @@
     <ReactCoverCarousel
         mediaQueries={{
         backgroundColor: 'white',
+        width: '100vw',
         '@media (max-width: 900px)': {
             height: '600px',
-            width: '700px',
         },
         '@media (min-width: 900px)': {
             height: '800px',
@@ -20,8 +20,9 @@
         enableScroll={false}
         activeImageIndex={3}
         otherFigureRotation={0}
-        currentFigureScale={2}
+        activeFigureScale={2}
         otherFigureScale={0.9}
+        autoFocus={true}
         PreviousButton={
             <FontAwesome style={{color: 'black', marginRight: '3em'}} name="angle-double-left" size="2x" />
         }
