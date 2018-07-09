@@ -1,5 +1,5 @@
 import React from 'react';
-import {ReactCoverCarousel} from 'react-cover-carousel';
+import ReactCoverCarousel from 'react-cover-carousel';
 import {StyleRoot} from 'radium';
 import images from './data/images';
 import Playground from 'component-playground';

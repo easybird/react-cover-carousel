@@ -14,7 +14,7 @@ Using it is as simple as:
 ```npm i react-cover-carousel -S```
 
 ```javascript
-import { ReactCoverCarousel } from 'react-cover-carousel';
+import ReactCoverCarousel from 'react-cover-carousel';
 
 render() {
     const allOfYourImages = [

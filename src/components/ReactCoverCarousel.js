@@ -1,8 +1,9 @@
 import React, {Component} from 'react';
-import styles from '../styles/coverCarouselContainer.css'
+import styles from '../styles/reactCoverCarousel.css'
 import CoverCarousel from './CoverCarousel';
+import Radium from 'radium';
 
-class CoverCarouselContainer extends Component {
+class ReactCoverCarousel extends Component {
   constructor (props) {
     super (props);
 
@@ -78,7 +79,7 @@ class CoverCarouselContainer extends Component {
     if (typeof activeImageIndex === 'number' && activeImageIndex < length) {
       this.setState ({
         activeIndex: activeImageIndex,
-        moveXInPixels: this._calculateMove (activeImageIndex),
+        moveXInPixels: this._calculateMoveXInPixels (activeImageIndex),
       });
     }
   }
@@ -122,11 +123,11 @@ class CoverCarouselContainer extends Component {
       // moveXInPixels to the selected figure
       e.preventDefault ();
 
-      this.setState ({activeIndex: index, moveXInPixels: this._calculateMove (index)});
+      this.setState ({activeIndex: index, moveXInPixels: this._calculateMoveXInPixels (index)});
     }
   };
 
-  _calculateMove = index => {
+  _calculateMoveXInPixels = index => {
     let distance = this._center () - index;
     return distance * this.imageBaseWidth;
   };
@@ -143,7 +144,7 @@ class CoverCarouselContainer extends Component {
       newActiveImageIndex = children.length - 1;
     }
     if (typeof newActiveImageIndex === 'number') {
-      const moveXInPixels = this._calculateMove (newActiveImageIndex);
+      const moveXInPixels = this._calculateMoveXInPixels (newActiveImageIndex);
       this.setState ({activeIndex: newActiveImageIndex, moveXInPixels});
       this.lastMoveXInPixels = moveXInPixels;
     }
@@ -164,7 +165,7 @@ class CoverCarouselContainer extends Component {
       newActiveImageIndex = 0;
     }
     if (typeof newActiveImageIndex === 'number') {
-      const moveXInPixels = this._calculateMove (newActiveImageIndex);
+      const moveXInPixels = this._calculateMoveXInPixels (newActiveImageIndex);
       this.setState ({activeIndex: newActiveImageIndex, moveXInPixels});
       this.lastMoveXInPixels = moveXInPixels;
     }
@@ -291,4 +292,6 @@ class CoverCarouselContainer extends Component {
   }
 }
 
-export default CoverCarouselContainer;
+ReactCoverCarousel.displayName = 'ReactCoverCarousel';
+
+export default Radium(ReactCoverCarousel);

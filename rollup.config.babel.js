@@ -10,13 +10,6 @@ export default (env, wut) => {
     moduleName: 'ReactCoverCarousel',
     sourcemap: true,
 
-    // output: {
-    //   file: './build/react-cover-carousel.js',
-    //   format: 'umd',
-    //   name: 'ReactCoverCarousel',
-    //   sourcemap: true
-    // },
-
     targets: [
       {
         dest: './build/react-cover-carousel.js',
