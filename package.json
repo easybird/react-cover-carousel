@@ -9,7 +9,7 @@
     "watch": "rollup -c rollup.config.babel.js -w --environment BUILD:development",
     "preinstall": "cd \"./examples\" && npm install",
     "examples:build": "cd \"./examples\" && \"./node_modules/.bin/webpack\" --mode production",
-    "examples:watch": "cd \"./examples\" && \"./node_modules/.bin/webpack-dev-server\" --mode development --watch",
+    "examples:watch": "cd \"./examples\" && \"./node_modules/.bin/webpack-dev-server\" --mode development --host 0.0.0.0 --watch",
     "examples:deploy": "npm run preinstall && npm run build && npm run examples:build",
     "start": "(npm run watch & npm run examples:watch)",
     "precommit": "npm run build && npm run examples:build",
