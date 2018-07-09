@@ -1,10 +1,5 @@
-/**
- * React Cover Carousel
- *
- * Author: easybird
- */
 import React, {Component} from 'react';
-import styles from '../reactCoverCarousel.css';
+import styles from '../styles/carouselNavigation.css';
 
 class CarouselNavigation extends Component {
   _renderPreviousButton = () => {

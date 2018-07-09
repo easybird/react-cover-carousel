@@ -1,0 +1,11 @@
+.container {
+    position: relative;
+    background: rgba(0, 0, 0, .1);
+    margin: 0 auto;
+    padding: 0;
+    overflow: hidden;
+  }
+  
+  .container:focus {
+    outline: none;
+  }

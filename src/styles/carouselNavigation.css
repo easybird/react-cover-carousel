@@ -1,0 +1,27 @@
+.actions {
+  position: absolute;
+  bottom: 30px;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+}
+
+.actions .button {
+  border: 1px solid #616161;
+  border-radius: 2px;
+  min-width: 120px;
+  padding: 5px;
+  margin: 2px;
+  background: #616161;
+  color: rgba(255, 255, 255, .9);
+}
+
+.actions .button:hover {
+  background: black;
+  color: white;
+}
+
+.actions .button:focus {
+  outline: none;
+}

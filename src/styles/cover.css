@@ -1,0 +1,33 @@
+.figure {
+    display: block;
+    position: relative;
+    margin: 0;
+    padding: 0;
+    flex: 0 0 auto;
+    cursor: pointer;
+    transition: all 1000ms ease;
+    transition-property: transform, margin, scale, opacity; /* overwrite the all transition with multiple properties */
+    backface-visibility: hidden;
+    z-index: 9;
+    align-self: center;
+    box-shadow: 6px 11px 35px rgba(0, 0, 0, 0.4);
+  }
+  
+  .cover {
+    display: block;
+    width: 100%;
+    box-shadow: 1px 1px 10px 0px rgba(0, 0, 0, .5);
+  }
+  
+  .text {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-size: .9em;
+    color: white;
+    padding: 5px;
+    overflow: hidden;
+    background: rgba(0, 0, 0, .6);
+  }

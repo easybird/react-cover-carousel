@@ -9,9 +9,9 @@ const Application = () => (
   <Fragment>
     <div id="header">
       <h2>
-        <FontAwesome name="diamond" size="1x" />
+        <FontAwesome name="diamond"/>
         React Cover Carousel
-        <FontAwesome name="diamond" size="1x" />
+        <FontAwesome name="diamond" />
       </h2>
     </div>
     <Examples />

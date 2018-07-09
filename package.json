@@ -15,6 +15,10 @@
     "precommit": "npm run build && npm run examples:build",
     "test": "jest --no-cache"
   },
+  "peerDependencies": {
+    "react": "^16.4.0",
+    "react-dom": "^16.4.0"
+  },
   "keywords": [
     "react",
     "component",
@@ -39,6 +43,8 @@
     "jest": "^23.1.0",
     "node-sass": "^4.9.0",
     "postcss-scss": "^1.0.5",
+    "react": "^16.4.0",
+    "react-dom": "^16.4.0",
     "react-test-renderer": "^16.4.0",
     "rollup": "^0.60.1",
     "rollup-plugin-babel": "^3.0.4",
@@ -52,8 +58,6 @@
     "url-loader": "^1.0.1"
   },
   "dependencies": {
-    "radium": "^0.24.0",
-    "react": "^16.4.0",
-    "react-dom": "^16.4.0"
+    "radium": "^0.24.0"
   }
 }
