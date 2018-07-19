@@ -48,6 +48,7 @@ render() {
 | autoFocus | boolean | Do you want the carousel to autoFocus when loading the component? If so, the user will be able to use his keyboard to navigate|
 | PreviousButton | `React` Component | Create your custom PreviousButton here|
 | NextButton |  `React` Component | Create your custom NextButton here|
+| maxPixelWidthForMobileMediaQuery | number | on Mobile, the Carousel will be vertically aligned in stead of horizontally. You can define the window width at which the carousel has to turn from vertical to horizontal.
 
 
 ## Default Props
@@ -73,7 +74,8 @@ static defaultProps = {
     transitionSpeed: 700,
     autoFocus: false,
     PreviousButton: null,
-    NextButton: null
+    NextButton: null,
+    maxPixelWidthForMobileMediaQuery: 480
   };
 ``` 
 

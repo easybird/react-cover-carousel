@@ -9,9 +9,10 @@ class ReactCoverCarousel extends Component {
 
     this.state = {
       activeIndex: props.activeImageIndex || 0,
-      moveXInPixels: 0,
+      moveInPixels: 0,
       width: props.width,
       height: props.height,
+      isMobileCarousel: true
     };
   }
 
@@ -34,12 +35,13 @@ class ReactCoverCarousel extends Component {
     infiniteScroll: true,
     transitionSpeed: 700,
     autoFocus: false,
+    maxPixelWidthForMobileMediaQuery: 480
   };
 
   busyScrolling = false;
-  lastMoveXInPixels = 0;
-  moveXInPixels = false;
-  lastX = 0;
+  lastMoveInPixels = 0;
+  moveInPixels = false;
+  lastMovement = 0;
   carouselDiv;
 
   componentDidMount () {
@@ -48,7 +50,7 @@ class ReactCoverCarousel extends Component {
     const eventListener = window && window.addEventListener;
 
     if (eventListener) {
-      window.addEventListener ('resize', this.updateDimensions.bind (this));
+      window.addEventListener ('resize', this.updateDimensions);
     }
     this.props.autoFocus && this.carouselDiv.focus ();
   }
@@ -63,36 +65,48 @@ class ReactCoverCarousel extends Component {
     const removeListener = window && window.removeEventListener;
 
     if (removeListener) {
-      window.removeEventListener ('resize', this.updateDimensions.bind (this));
+      window.removeEventListener ('resize', this.updateDimensions);
     }
   }
 
-  updateDimensions (activeImageIndex) {
-    const {children} = this.props;
-    let length = React.Children.count (children);
+  get isMobileCarousel() {
+    if (this.props.maxPixelWidthForMobileMediaQuery && window) {
+      console.log('window innerwidth', window.innerWidth);
+      if (this.props.maxPixelWidthForMobileMediaQuery > window.innerWidth) {
+        return true;
+      }
+    }
+    return false;
+  }
 
+  updateDimensions = (activeImageIndex) => {
     const width = ReactDOM.findDOMNode (this).offsetWidth;
     const height = ReactDOM.findDOMNode (this).offsetHeight;
 
-    this.setState ({width, height});
+    this.setState ({width, height, isMobileCarousel: this.isMobileCarousel});
 
-    if (typeof activeImageIndex === 'number' && activeImageIndex < length) {
-      this.setState ({
-        activeIndex: activeImageIndex,
-        moveXInPixels: this._calculateMoveXInPixels (activeImageIndex),
-      });
+    if (typeof activeImageIndex === 'number') {
+      this.triggerMovement(activeImageIndex);
     }
   }
 
-  /**
-   * Private methods
-   */
-  _center () {
+  triggerMovement = (activeIndex) => {
+    const moveInPixels = this.calculateMoveInPixels (activeIndex);
+    
+    this.lastmoveInPixels = moveInPixels;
+      
+    this.setState ({
+      activeIndex,
+      moveInPixels,
+    });
+  }
+
+  get centralIndex () {
     let length = React.Children.count (this.props.children);
     return Math.floor (length / 2);
   }
 
-  _keyDown (e) {
+  keyDown = (e) => {
     if (e.keyCode === 37) {
       this.handleNavigateToPreviousCover ();
     } else if (e.keyCode === 39) {
@@ -100,10 +114,16 @@ class ReactCoverCarousel extends Component {
     }
   }
 
-  get imageBaseWidth () {
-    const totalNrOfVisibleImages = this.props.displayQuantityOfSide * 2 + 1;
+  get totalNrOfVisibleImages() {
+    return this.props.displayQuantityOfSide * 2 + 1
+  }
 
-    return this.state.width / totalNrOfVisibleImages;
+  get imageBaseWidth () {
+    return this.state.width / this.totalNrOfVisibleImages;
+  }
+
+  get imageBaseHeight () {
+    return this.state.height / this.totalNrOfVisibleImages;
   }
 
   handleCoverClick = (index, action, e) => {
@@ -120,16 +140,18 @@ class ReactCoverCarousel extends Component {
       }
 
     } else {
-      // moveXInPixels to the selected figure
       e.preventDefault ();
-
-      this.setState ({activeIndex: index, moveXInPixels: this._calculateMoveXInPixels (index)});
+      this.triggerMovement(index);
     }
   };
 
-  _calculateMoveXInPixels = index => {
-    let distance = this._center () - index;
-    return distance * this.imageBaseWidth;
+  calculateMoveInPixels = index => {
+    const distance = this.centralIndex - index;
+    console.log('---distance', distance, this.centralIndex, index, '\n');
+    const imageBase = (this.state.isMobileCarousel ? this.imageBaseHeight: this.imageBaseWidth);
+    console.log('---imageBase', imageBase, '\n');
+    
+    return distance * imageBase;
   };
 
   handleNavigateToPreviousCover = () => {
@@ -144,9 +166,7 @@ class ReactCoverCarousel extends Component {
       newActiveImageIndex = children.length - 1;
     }
     if (typeof newActiveImageIndex === 'number') {
-      const moveXInPixels = this._calculateMoveXInPixels (newActiveImageIndex);
-      this.setState ({activeIndex: newActiveImageIndex, moveXInPixels});
-      this.lastMoveXInPixels = moveXInPixels;
+      this.triggerMovement(newActiveImageIndex);
     }
   };
 
@@ -165,13 +185,11 @@ class ReactCoverCarousel extends Component {
       newActiveImageIndex = 0;
     }
     if (typeof newActiveImageIndex === 'number') {
-      const moveXInPixels = this._calculateMoveXInPixels (newActiveImageIndex);
-      this.setState ({activeIndex: newActiveImageIndex, moveXInPixels});
-      this.lastMoveXInPixels = moveXInPixels;
+      this.triggerMovement(newActiveImageIndex);
     }
   };
 
-  _handleWheel (e) {
+  handleWheel = (e) => {
     e.preventDefault ();
 
     if (!this.busyScrolling) {
@@ -188,43 +206,47 @@ class ReactCoverCarousel extends Component {
 
       if (count > 0) {
         const sign = Math.abs (delta) / delta;
-        let func = null;
+        let navigateToFn = null;
 
         if (sign > 0) {
-          func = this.handleNavigateToPreviousCover;
+          navigateToFn = this.handleNavigateToPreviousCover;
         } else if (sign < 0) {
-          func = this.handleNavigateToNextCover;
+          navigateToFn = this.handleNavigateToNextCover;
         }
 
-        func && func ();
+        navigateToFn && navigateToFn ();
         setTimeout (() => (this.busyScrolling = false), 1000);
       }
     }
   }
 
-  _handleTouchStart (e) {
-    this.lastX = e.nativeEvent.touches[0].clientX;
-    this.lastMoveXInPixels = this.state.moveXInPixels;
+  getTouchMovement(e) {
+    const nativeTouchEvents = e.nativeEvent.touches[0];
+    this.lastMovement = this.state.isMobileCarousel ? nativeTouchEvents.clientY : nativeTouchEvents.clientX;
   }
 
-  _handleTouchMove (e) {
+  handleTouchStart = (e) =>  {
+    //TODO mobile: should be clientY on mobile
+    this.lastMovement = this.getTouchMovement(e);
+    this.lastMoveInPixels = this.state.moveInPixels;
+  }
+
+  handleTouchMove = (e) => {
     e.preventDefault ();
 
-    let clientX = e.nativeEvent.touches[0].clientX;
-    let lastX = this.lastX;
-    let moveXInPixels = clientX - lastX;
-    let totalmoveXInPixels = this.lastMoveXInPixels - moveXInPixels;
-    let sign = Math.abs (moveXInPixels) / moveXInPixels;
+    let moveInPixels = this.getTouchMovement(e) - this.lastMovement;
+    let totalmoveInPixels = this.lastMoveInPixels - moveInPixels;
+    let sign = Math.abs (moveInPixels) / moveInPixels;
 
-    if (Math.abs (totalmoveXInPixels) >= this.imageBaseWidth) {
-      let fn = null;
+    if (Math.abs (totalmoveInPixels) >= this.state.isMobileCarousel ? this.imageBaseHeight : this.imageBaseWidth) {
+      let navigateToFn = null;
       if (sign > 0) {
-        fn = this.handleNavigateToPreviousCover ();
+        navigateToFn = this.handleNavigateToPreviousCover ();
       } else if (sign < 0) {
-        fn = this.handleNavigateToNextCover ();
+        navigateToFn = this.handleNavigateToNextCover ();
       }
-      if (typeof fn === 'function') {
-        fn ();
+      if (typeof navigateToFn === 'function') {
+        navigateToFn ();
       }
     }
   }
@@ -249,7 +271,7 @@ class ReactCoverCarousel extends Component {
       PreviousButton,
       NextButton
     } = this.props;
-    const {width, height, activeIndex, moveXInPixels} = this.state;
+    const {width, height, activeIndex, moveInPixels} = this.state;
 
     return (
       <div
@@ -259,10 +281,10 @@ class ReactCoverCarousel extends Component {
             ? mediaQueries
             : {width: `${width}px`, height: `${height}px`}
         }
-        onWheel={enableScroll ? this._handleWheel.bind (this) : null}
-        onTouchStart={this._handleTouchStart.bind (this)}
-        onTouchMove={this._handleTouchMove.bind (this)}
-        onKeyDown={this._keyDown.bind (this)}
+        onWheel={enableScroll && this.handleWheel}
+        onTouchStart={this.handleTouchStart}
+        onTouchMove={this.handleTouchMove}
+        onKeyDown={this.keyDown}
         tabIndex="-1"
         ref={carouselDiv => (this.carouselDiv = carouselDiv)}
       >
@@ -271,19 +293,20 @@ class ReactCoverCarousel extends Component {
           enableHeading={enableHeading}
           activeIndex={activeIndex}
           transitionSpeed={transitionSpeed}
-          moveXInPixels={moveXInPixels}
+          moveInPixels={moveInPixels}
           activeFigureScale={activeFigureScale}
           otherFigureRotation={otherFigureRotation}
           otherFigureScale={otherFigureScale}
           activeImageStyle={activeImageStyle}
           displayQuantityOfSide={displayQuantityOfSide}
-          imageBaseWidth={this.imageBaseWidth}
+          imageBase={this.state.isMobileCarousel ? this.imageBaseHeight : this.imageBaseWidth}
           infiniteScroll={infiniteScroll}
           PreviousButton={PreviousButton}
           NextButton={NextButton}
           onNavigateToPreviousCover={this.handleNavigateToPreviousCover}
           onNavigateToNextCover={this.handleNavigateToNextCover}
           onCoverClick={this.handleCoverClick}
+          isMobileCarousel={this.state.isMobileCarousel}
         >
           {children}
         </CoverCarousel>

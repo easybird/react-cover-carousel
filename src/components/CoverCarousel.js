@@ -13,20 +13,21 @@ const CoverCarousel = ({
       children,
       onNavigateToPreviousCover,
       onNavigateToNextCover,
-      moveXInPixels,
+      moveInPixels,
       activeFigureScale,
       otherFigureRotation,
       otherFigureScale,
       activeImageStyle,
       displayQuantityOfSide,
-      imageBaseWidth,
+      imageBase,
       transitionSpeed,
       onCoverClick,
-      enableHeading
+      enableHeading,
+      isMobileCarousel
     }) => (
       <div className={styles.ReactCoverCarousel}>
         <div className={styles.preloader} />
-        <div className={styles.stage}>
+        <div className={styles.stage} style={isMobileCarousel ? { flexDirection: 'column'}: {}}>
           {children.map ((child, index) => (
             <Cover
               key={index}
@@ -35,15 +36,16 @@ const CoverCarousel = ({
               activeIndex={activeIndex}
               transitionSpeed={transitionSpeed}
               nrOfCovers={children.length}
-              moveXInPixels={moveXInPixels}
+              moveInPixels={moveInPixels}
               activeFigureScale={activeFigureScale}
               otherFigureRotation={otherFigureRotation}
               otherFigureScale={otherFigureScale}
               activeImageStyle={activeImageStyle}
               displayQuantityOfSide={displayQuantityOfSide}
-              imageBaseWidth={imageBaseWidth}
+              imageBase={imageBase}
               onCoverClick={onCoverClick}
               enableHeading={enableHeading}
+              isMobileCarousel={isMobileCarousel}
             />
           ))}
         </div>

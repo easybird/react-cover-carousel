@@ -10,6 +10,7 @@ const DefaultProps = require ('raw-loader!./carouselExamples/DefaultProps.exampl
 const RotationCoversInfiniteScroll = require ('raw-loader!./carouselExamples/RotationCoversInfiniteScroll.example');
 const FlatCoversNoInfiniteScrollWithHeading = require ('raw-loader!./carouselExamples/FlatCoversNoInfiniteScrollWithHeading.example');
 const FlatCoversWithStyleRoot = require ('raw-loader!./carouselExamples/FlatCoversWithStyleRoot.example');
+const VerticalCoverCarousel = require('raw-loader!./carouselExamples/VerticalCoverCarousel.example');
 
 class ModalExample extends React.Component {
   constructor () {
@@ -80,6 +81,7 @@ const Application = () => {
           scope={{React, images, ReactCoverCarousel}}
         />
       </div>
+      <hr />
       <h2>Rotation Cover</h2>
       <h4>Infinite Scroll, 3 images each side, with rotation</h4>
       <div className="component-documentation">
@@ -88,6 +90,16 @@ const Application = () => {
           scope={{React, images, ReactCoverCarousel}}
         />
       </div>
+      <hr />
+      <h2>Vertical CoverCarousel </h2>
+      <h4>When height is bigger than width, the carousel will behave in a vertical direction</h4>
+      <div className="component-documentation">
+        <Playground
+          codeText={VerticalCoverCarousel}
+          scope={{React, images, ReactCoverCarousel}}
+        />
+      </div>
+      <hr />
       <h2>
         Flat Cover
       </h2>
@@ -100,6 +112,7 @@ const Application = () => {
           scope={{React, images, ReactCoverCarousel}}
         />
       </div>
+      <hr />
       <h2>Flat Covers, with StyleRoot</h2>
       <h4>Infinite Scroll, 2 images each side, responsive, without rotation</h4>
       <ModalExample />

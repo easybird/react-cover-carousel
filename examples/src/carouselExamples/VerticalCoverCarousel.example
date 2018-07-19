@@ -1,5 +1,5 @@
 <ReactCoverCarousel
-    width={800}
+    width={100}
     height={400}
     displayQuantityOfSide={3}
     navigation={false}
@@ -16,7 +16,7 @@
     mediaQueries={{}}
     infiniteScroll={true}
     transitionSpeed={700}
-    maxPixelWidthForMobileMediaQuery={480}
+    maxPixelWidthForMobileMediaQuery={3000}
 >
     {images}
 </ReactCoverCarousel>

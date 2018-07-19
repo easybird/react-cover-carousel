@@ -8,42 +8,46 @@ const Cover = ({
   activeIndex,
   transitionSpeed,
   nrOfCovers,
-  moveXInPixels,
+  moveInPixels,
   activeFigureScale,
   otherFigureRotation,
   otherFigureScale,
   activeImageStyle,
   displayQuantityOfSide,
-  imageBaseWidth,
+  imageBase,
   onCoverClick,
-  enableHeading
+  enableHeading,
+  isMobileCarousel
 }) => {
   const isActiveCover = index === activeIndex;
   let style = {
     transition: `all ${transitionSpeed}ms ease`,
-    width: `${imageBaseWidth}px`,
+    width: `${imageBase}px`, // TODO this works on mobileCarousel only with square images, should be height in stead
     opacity: getOpacity (index, activeIndex, displayQuantityOfSide),
     zIndex: isActiveCover ? 10 : `${10 - Math.abs (index - activeIndex)}`,
   };
   const oddNumberOfImages = nrOfCovers % 2 === 0;
 
-  let offset = oddNumberOfImages ? -imageBaseWidth / 2 : 0;
+  let offset = oddNumberOfImages ? -imageBase / 2 : 0;
 
-  const translateX = `translateX(${moveXInPixels + offset}px)`;
+  const transformTranslate = moveInPixels + offset;
+  const transformTranslateInPixels = isMobileCarousel ? `translateY(${transformTranslate}px)`: `translateX(${transformTranslate}px)`;
+  const leftSideRotation = isMobileCarousel ? `rotateX(${otherFigureRotation}deg)` : `rotateY(${otherFigureRotation}deg)`
+  const rightSideRotation = isMobileCarousel ? `rotateX(-${otherFigureRotation}deg)` : `rotateY(-${otherFigureRotation}deg)`
 
-  // Handle translateX
+  // Handle transformTranslateInPixels
   if (isActiveCover) {
-    style['transform'] = `${translateX}  scale(${activeFigureScale}`;
+    style['transform'] = `${transformTranslateInPixels}  scale(${activeFigureScale}`;
   } else if (index < activeIndex) {
     // Left side
     style[
       'transform'
-    ] = `${translateX} rotateY(${otherFigureRotation}deg) scale(${otherFigureScale}`;
+    ] = `${transformTranslateInPixels} ${leftSideRotation} scale(${otherFigureScale}`;
   } else if (index > activeIndex) {
     // Right side
     style[
       'transform'
-    ] = ` ${translateX} rotateY(-${otherFigureRotation}deg) scale(${otherFigureScale})`;
+    ] = ` ${transformTranslateInPixels} ${rightSideRotation} scale(${otherFigureScale})`;
   }
 
   const cover = React.cloneElement (CoverImage, {
