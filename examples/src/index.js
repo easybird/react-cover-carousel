@@ -1,21 +1,21 @@
 import React, {Fragment} from 'react';
-import ReactDOM from 'react-dom';
-import FontAwesome from 'react-fontawesome';
+import { render } from 'react-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faBasketballBall } from '@fortawesome/free-solid-svg-icons'
 import Examples from './react_cover_carousel';
-
-import 'font-awesome/css/font-awesome.css';
+import './style.css';
 
 const Application = () => (
   <Fragment>
     <div id="header">
       <h2>
-        <FontAwesome name="diamond"/>
+        <FontAwesomeIcon icon={faBasketballBall}/>
         React Cover Carousel
-        <FontAwesome name="diamond" />
+        <FontAwesomeIcon icon={faBasketballBall} />
       </h2>
     </div>
     <Examples />
   </Fragment>
 );
 
-ReactDOM.render (<Application />, document.getElementById ('app'));
+render (<Application />, document.getElementById ('app'));

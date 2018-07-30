@@ -4,6 +4,7 @@
     margin: 0 auto;
     padding: 0;
     overflow: hidden;
+    touch-action: none; /* to disable scroll on div for mobile */
   }
   
   .container:focus {

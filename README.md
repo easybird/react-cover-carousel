@@ -38,7 +38,6 @@ render() {
 | enableScroll | boolean | Should the carousel be scrollable?|
 | activeImageIndex | number | The index of the image that should be active|
 | activeImageStyle | React Style Object | The custom style needed for the active image to 🌟|
-| clickable | boolean | Should the images be clickable?|
 | activeFigureScale | number | How much do you want to scale the active image?|
 | otherFigureScale | number | Do you want to up/downscale the other images? Go ahead!|
 | otherFigureRotation | number | How much do you want to rotate the other covers in the carousel?|
@@ -49,6 +48,7 @@ render() {
 | PreviousButton | `React` Component | Create your custom PreviousButton here|
 | NextButton |  `React` Component | Create your custom NextButton here|
 | maxPixelWidthForMobileMediaQuery | number | on Mobile, the Carousel will be vertically aligned in stead of horizontally. You can define the window width at which the carousel has to turn from vertical to horizontal.
+| zoomable | boolean | Tapping/Clicking on an image will zoom the image to full screen (cfr Instagram). Once Zoomed, clicking/tapping again will trigger the data-action specified on the image
 
 
 ## Default Props
@@ -65,7 +65,6 @@ static defaultProps = {
     activeImageStyle: {
       margin: '5em',
     },
-    clickable: true,
     activeFigureScale: 1.5,
     otherFigureScale: 0.8,
     otherFigureRotation: 40,
@@ -75,7 +74,8 @@ static defaultProps = {
     autoFocus: false,
     PreviousButton: null,
     NextButton: null,
-    maxPixelWidthForMobileMediaQuery: 480
+    maxPixelWidthForMobileMediaQuery: 480,
+    zoomable: true
   };
 ``` 
 

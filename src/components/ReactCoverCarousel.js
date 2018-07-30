@@ -1,7 +1,10 @@
 import React, {Component} from 'react';
-import styles from '../styles/reactCoverCarousel.css'
+import '../styles/reactCoverCarousel.css';
 import CoverCarousel from './CoverCarousel';
 import Radium from 'radium';
+import ZoomedCover from './ZoomedCover';
+import {calculateMaxDelta, DIRECTION} from '../utils/compareXandYDirections';
+import withScrollTresholdIndication from './withScrollTresholdIndicator';
 
 class ReactCoverCarousel extends Component {
   constructor (props) {
@@ -12,7 +15,8 @@ class ReactCoverCarousel extends Component {
       moveInPixels: 0,
       width: props.width,
       height: props.height,
-      isMobileCarousel: true
+      isMobileCarousel: true,
+      isZoomedIn: false,
     };
   }
 
@@ -27,7 +31,6 @@ class ReactCoverCarousel extends Component {
     activeImageStyle: {
       margin: '5em',
     },
-    clickable: true,
     activeFigureScale: 1.5,
     otherFigureScale: 0.8,
     otherFigureRotation: 40,
@@ -35,17 +38,18 @@ class ReactCoverCarousel extends Component {
     infiniteScroll: true,
     transitionSpeed: 700,
     autoFocus: false,
-    maxPixelWidthForMobileMediaQuery: 480
+    maxPixelWidthForMobileMediaQuery: 680,
+    zoomable: true,
   };
 
-  busyScrolling = false;
+  busyMoving = false;
   lastMoveInPixels = 0;
   moveInPixels = false;
   lastMovement = 0;
   carouselDiv;
 
   componentDidMount () {
-    setTimeout (() => this.updateDimensions (this.props.activeImageIndex), 5);
+    this.updateDimensions (this.props.activeImageIndex);
 
     const eventListener = window && window.addEventListener;
 
@@ -56,6 +60,27 @@ class ReactCoverCarousel extends Component {
   }
 
   componentWillReceiveProps (nextProps) {
+    // console.log (
+    //   '---nextProps thresholdReached, tresholdPercentage scrolling scrollDirectionType scrollDirection',
+    //   nextProps.tresholdReached,
+    //   nextProps.tresholdPercentage,
+    //   nextProps.scrolling,
+    //   nextProps.scrollDirectionType,
+    //   nextProps.scrollDirection,
+    //   '\n'
+    // );
+    if (nextProps.tresholdReached && !this.props.tresholdReached) {
+      if (
+        this.props.scrollDirection === DIRECTION.LEFT ||
+        nextProps.scrollDirection === DIRECTION.UP
+      ) {
+        this.handleNavigateToPreviousCover ();
+      } else {
+        this.handleNavigateToNextCover ();
+      }
+      this.props.onResetTreshold ();
+    }
+
     if (this.props.activeImageIndex !== nextProps.activeImageIndex) {
       this.updateDimensions (nextProps.activeImageIndex);
     }
@@ -69,53 +94,71 @@ class ReactCoverCarousel extends Component {
     }
   }
 
-  get isMobileCarousel() {
+  get isMobile () {
+    return (
+      navigator &&
+      /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test (
+        navigator.userAgent
+      )
+    );
+  }
+
+  get isMobileCarousel () {
     if (this.props.maxPixelWidthForMobileMediaQuery && window) {
-      console.log('window innerwidth', window.innerWidth);
-      if (this.props.maxPixelWidthForMobileMediaQuery > window.innerWidth) {
+      if (
+        this.isMobile ||
+        this.props.maxPixelWidthForMobileMediaQuery > window.innerWidth
+      ) {
         return true;
       }
     }
     return false;
   }
 
-  updateDimensions = (activeImageIndex) => {
-    const width = ReactDOM.findDOMNode (this).offsetWidth;
-    const height = ReactDOM.findDOMNode (this).offsetHeight;
+  updateDimensions = activeImageIndex => {
+    const moveToIndex = activeImageIndex || this.props.activeImageIndex;
+    const isMobileCarousel = this.isMobileCarousel;
+    let width = this.state.width;
+    let height = this.state.height;
 
-    this.setState ({width, height, isMobileCarousel: this.isMobileCarousel});
-
-    if (typeof activeImageIndex === 'number') {
-      this.triggerMovement(activeImageIndex);
+    if (this.carouselDiv) {
+      width = this.carouselDiv.offsetWidth;
+      height = this.carouselDiv.offsetHeight;
     }
-  }
 
-  triggerMovement = (activeIndex) => {
+    this.setState ({width, height, isMobileCarousel}, () => {
+      if (typeof moveToIndex === 'number') {
+        this.triggerMovement (moveToIndex);
+      }
+    });
+  };
+
+  triggerMovement = activeIndex => {
     const moveInPixels = this.calculateMoveInPixels (activeIndex);
-    
+
     this.lastmoveInPixels = moveInPixels;
-      
+
     this.setState ({
       activeIndex,
       moveInPixels,
     });
-  }
+  };
 
   get centralIndex () {
     let length = React.Children.count (this.props.children);
     return Math.floor (length / 2);
   }
 
-  keyDown = (e) => {
+  keyDown = e => {
     if (e.keyCode === 37) {
       this.handleNavigateToPreviousCover ();
     } else if (e.keyCode === 39) {
       this.handleNavigateToNextCover ();
     }
-  }
+  };
 
-  get totalNrOfVisibleImages() {
-    return this.props.displayQuantityOfSide * 2 + 1
+  get totalNrOfVisibleImages () {
+    return this.props.displayQuantityOfSide * 2 + 1;
   }
 
   get imageBaseWidth () {
@@ -127,30 +170,32 @@ class ReactCoverCarousel extends Component {
   }
 
   handleCoverClick = (index, action, e) => {
-    if (!this.props.clickable) {
-      e.preventDefault ();
-      return;
+    e.preventDefault ();
+
+    const isActiveImage = this.state.activeIndex === index;
+
+    if (!isActiveImage) {
+      return this.triggerMovement (index);
     }
 
-    if (this.state.activeIndex === index) {
-      // If on the active figure
-      if (typeof action === 'string') {
-        // If action is a URL (string), follow the link
-        window.open (action, '_blank');
-      }
+    if (!this.state.isZoomedIn) {
+      return this.setState ({isZoomedIn: true});
+    }
 
-    } else {
-      e.preventDefault ();
-      this.triggerMovement(index);
+    if (this.state.isZoomedIn && typeof action === 'string') {
+      // If action is a URL (string), follow the link
+      window.open (action, '_blank');
     }
   };
 
   calculateMoveInPixels = index => {
     const distance = this.centralIndex - index;
-    console.log('---distance', distance, this.centralIndex, index, '\n');
-    const imageBase = (this.state.isMobileCarousel ? this.imageBaseHeight: this.imageBaseWidth);
-    console.log('---imageBase', imageBase, '\n');
-    
+    // console.log ('---distance', distance, this.centralIndex, index, '\n');
+    const imageBase = this.state.isMobileCarousel
+      ? this.imageBaseHeight
+      : this.imageBaseWidth;
+    // console.log ('---imageBase', imageBase, '\n');
+
     return distance * imageBase;
   };
 
@@ -166,7 +211,7 @@ class ReactCoverCarousel extends Component {
       newActiveImageIndex = children.length - 1;
     }
     if (typeof newActiveImageIndex === 'number') {
-      this.triggerMovement(newActiveImageIndex);
+      this.triggerMovement (newActiveImageIndex);
     }
   };
 
@@ -178,81 +223,61 @@ class ReactCoverCarousel extends Component {
 
     if (activeIndex + 1 < children.length) {
       newActiveImageIndex = activeIndex + 1;
-    } else if (
-      activeIndex + 1 >= children.length &&
-      infiniteScroll
-    ) {
+    } else if (activeIndex + 1 >= children.length && infiniteScroll) {
       newActiveImageIndex = 0;
     }
     if (typeof newActiveImageIndex === 'number') {
-      this.triggerMovement(newActiveImageIndex);
+      this.triggerMovement (newActiveImageIndex);
     }
   };
 
-  handleWheel = (e) => {
-    e.preventDefault ();
-
-    if (!this.busyScrolling) {
-      const deltaXOrY = Math.max (Math.abs (e.deltaY), Math.abs (e.deltaX)) ===
-        Math.abs (e.deltaY)
-        ? e.deltaY
-        : e.deltaX;
-
-      this.busyScrolling = true;
-      let delta = Math.abs (deltaXOrY) === 125
-        ? deltaXOrY * -120
-        : deltaXOrY < 0 ? -600000 : 600000;
-      let count = Math.ceil (Math.abs (delta) / 120);
-
-      if (count > 0) {
-        const sign = Math.abs (delta) / delta;
-        let navigateToFn = null;
-
-        if (sign > 0) {
-          navigateToFn = this.handleNavigateToPreviousCover;
-        } else if (sign < 0) {
-          navigateToFn = this.handleNavigateToNextCover;
-        }
-
-        navigateToFn && navigateToFn ();
-        setTimeout (() => (this.busyScrolling = false), 1000);
-      }
-    }
-  }
-
-  getTouchMovement(e) {
+  getTouchMovement (e) {
     const nativeTouchEvents = e.nativeEvent.touches[0];
-    this.lastMovement = this.state.isMobileCarousel ? nativeTouchEvents.clientY : nativeTouchEvents.clientX;
+    return this.state.isMobileCarousel
+      ? nativeTouchEvents.clientY
+      : nativeTouchEvents.clientX;
   }
 
-  handleTouchStart = (e) =>  {
-    //TODO mobile: should be clientY on mobile
-    this.lastMovement = this.getTouchMovement(e);
+  handleTouchStart = e => {
+    this.lastMovement = this.getTouchMovement (e);
     this.lastMoveInPixels = this.state.moveInPixels;
-  }
+  };
 
-  handleTouchMove = (e) => {
+  handleTouchMove = e => {
     e.preventDefault ();
 
-    let moveInPixels = this.getTouchMovement(e) - this.lastMovement;
+    let moveInPixels = this.getTouchMovement (e) - this.lastMovement;
     let totalmoveInPixels = this.lastMoveInPixels - moveInPixels;
     let sign = Math.abs (moveInPixels) / moveInPixels;
+    console.log (
+      '---handleTouchMove',
+      moveInPixels,
+      totalmoveInPixels,
+      sign,
+      '\n'
+    );
 
-    if (Math.abs (totalmoveInPixels) >= this.state.isMobileCarousel ? this.imageBaseHeight : this.imageBaseWidth) {
+    if (
+      Math.abs (totalmoveInPixels) >= this.state.isMobileCarousel
+        ? this.imageBaseHeight
+        : this.imageBaseWidth
+    ) {
       let navigateToFn = null;
       if (sign > 0) {
-        navigateToFn = this.handleNavigateToPreviousCover ();
+        navigateToFn = this.handleNavigateToPreviousCover;
       } else if (sign < 0) {
-        navigateToFn = this.handleNavigateToNextCover ();
+        navigateToFn = this.handleNavigateToNextCover;
       }
       if (typeof navigateToFn === 'function') {
-        navigateToFn ();
+        if (!this.busyMoving) {
+          this.busyMoving = true;
+          navigateToFn ();
+
+          setTimeout (() => (this.busyMoving = false), 1000);
+        }
       }
     }
-  }
-
-  // shadow: al dan niet
-  // previous / next :-> kies de tests (of icoontje)
+  };
 
   render () {
     const {
@@ -269,24 +294,26 @@ class ReactCoverCarousel extends Component {
       displayQuantityOfSide,
       infiniteScroll,
       PreviousButton,
-      NextButton
+      NextButton,
     } = this.props;
-    const {width, height, activeIndex, moveInPixels} = this.state;
+    const {width, height, activeIndex, moveInPixels, isZoomedIn} = this.state;
 
-    return (
+    return [
       <div
-        className={styles.container}
+        ref={carouselDiv => {
+          this.carouselDiv = carouselDiv;
+        }}
+        className="container"
         style={
           Object.keys (mediaQueries).length !== 0
             ? mediaQueries
             : {width: `${width}px`, height: `${height}px`}
         }
-        onWheel={enableScroll && this.handleWheel}
+        onWheel={enableScroll && !isZoomedIn ? this.props.onWheel : undefined}
         onTouchStart={this.handleTouchStart}
         onTouchMove={this.handleTouchMove}
         onKeyDown={this.keyDown}
         tabIndex="-1"
-        ref={carouselDiv => (this.carouselDiv = carouselDiv)}
       >
         <CoverCarousel
           navigation={navigation}
@@ -299,7 +326,11 @@ class ReactCoverCarousel extends Component {
           otherFigureScale={otherFigureScale}
           activeImageStyle={activeImageStyle}
           displayQuantityOfSide={displayQuantityOfSide}
-          imageBase={this.state.isMobileCarousel ? this.imageBaseHeight : this.imageBaseWidth}
+          imageBase={
+            this.state.isMobileCarousel
+              ? this.imageBaseHeight
+              : this.imageBaseWidth
+          }
           infiniteScroll={infiniteScroll}
           PreviousButton={PreviousButton}
           NextButton={NextButton}
@@ -310,11 +341,19 @@ class ReactCoverCarousel extends Component {
         >
           {children}
         </CoverCarousel>
-      </div>
-    );
+
+        <ZoomedCover
+          Cover={
+            children && typeof activeIndex === 'number' && children[activeIndex]
+          }
+          isZoomedIn={isZoomedIn}
+          onStopZoom={() => this.setState ({isZoomedIn: false})}
+        />
+      </div>,
+    ];
   }
 }
 
 ReactCoverCarousel.displayName = 'ReactCoverCarousel';
 
-export default Radium(ReactCoverCarousel);
+export default withScrollTresholdIndication (Radium (ReactCoverCarousel));

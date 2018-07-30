@@ -1,16 +1,18 @@
 import React from 'react';
-import ReactCoverCarousel from 'react-cover-carousel';
+import ReactCoverCarousel from '../../src';
 import {StyleRoot} from 'radium';
 import images from './data/images';
-import Playground from 'component-playground';
 import ReactModal from 'react-modal';
-import FontAwesome from 'react-fontawesome';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import {faArrowLeft, faArrowRight} from '@fortawesome/free-solid-svg-icons';
+import './style.css';
+import {LiveProvider, LiveEditor, LiveError, LivePreview} from 'react-live';
 
 const DefaultProps = require ('raw-loader!./carouselExamples/DefaultProps.example');
 const RotationCoversInfiniteScroll = require ('raw-loader!./carouselExamples/RotationCoversInfiniteScroll.example');
 const FlatCoversNoInfiniteScrollWithHeading = require ('raw-loader!./carouselExamples/FlatCoversNoInfiniteScrollWithHeading.example');
 const FlatCoversWithStyleRoot = require ('raw-loader!./carouselExamples/FlatCoversWithStyleRoot.example');
-const VerticalCoverCarousel = require('raw-loader!./carouselExamples/VerticalCoverCarousel.example');
+const VerticalCoverCarousel = require ('raw-loader!./carouselExamples/VerticalCoverCarousel.example');
 
 class ModalExample extends React.Component {
   constructor () {
@@ -33,20 +35,33 @@ class ModalExample extends React.Component {
 
   render () {
     return (
-      <div className="modal-example">
+      <div className="modalExample">
         <button onClick={this.handleOpenModal}>Open Example in Modal</button>
         <ReactModal
-          style={{overlay: {zIndex: 1001}, content: { top: 0, left: 0, right: 0, bottom: 0}}}
+          style={{
+            overlay: {zIndex: 1001},
+            content: {top: 0, left: 0, right: 0, bottom: 0},
+          }}
           isOpen={this.state.showModal}
           contentLabel="Modal Example"
         >
           <button onClick={this.handleCloseModal}>Close Modal</button>
-          <div className="component-documentation">
-            <Playground
-              codeText={FlatCoversWithStyleRoot}
-              scope={{React, images, ReactCoverCarousel, StyleRoot, FontAwesome}}
-            />
-          </div>
+          <LiveProvider
+            code={FlatCoversWithStyleRoot}
+            scope={{
+              React,
+              images,
+              ReactCoverCarousel,
+              StyleRoot,
+              FontAwesomeIcon,
+              faArrowLeft,
+              faArrowRight,
+            }}
+          >
+            <LiveEditor />
+            <LiveError />
+            <LivePreview />
+          </LiveProvider>
         </ReactModal>
       </div>
     );
@@ -63,10 +78,10 @@ const Application = () => {
             'Below examples show you how to use this library. You can play with the code in an interactive way. The example on the right will dynamically change as you touch the code. Thanks to the '
           }
           <a
-            href="https://github.com/FormidableLabs/component-playground"
+            href="https://github.com/FormidableLabs/react-live"
             target="_blank"
           >
-            component-playground
+            react-live
           </a>
           {' HOC made by the guys from '}
           <a href="https://formidable.com/" target="_blank"> FormidableLabs </a>
@@ -75,30 +90,38 @@ const Application = () => {
       <hr />
       <h2>Default ReactCoverCarousel</h2>
       <h4>This Carousel contains all the default props</h4>
-      <div className="component-documentation">
-        <Playground
-          codeText={DefaultProps}
-          scope={{React, images, ReactCoverCarousel}}
-        />
-      </div>
+      <LiveProvider
+        code={DefaultProps}
+        scope={{React, images, ReactCoverCarousel}}
+      >
+        <LiveEditor />
+        <LiveError />
+        <LivePreview />
+      </LiveProvider>
       <hr />
       <h2>Rotation Cover</h2>
       <h4>Infinite Scroll, 3 images each side, with rotation</h4>
-      <div className="component-documentation">
-        <Playground
-          codeText={RotationCoversInfiniteScroll}
-          scope={{React, images, ReactCoverCarousel}}
-        />
-      </div>
+      <LiveProvider
+        code={RotationCoversInfiniteScroll}
+        scope={{React, images, ReactCoverCarousel}}
+      >
+        <LiveEditor />
+        <LiveError />
+        <LivePreview />
+      </LiveProvider>
       <hr />
       <h2>Vertical CoverCarousel </h2>
-      <h4>When height is bigger than width, the carousel will behave in a vertical direction</h4>
-      <div className="component-documentation">
-        <Playground
-          codeText={VerticalCoverCarousel}
-          scope={{React, images, ReactCoverCarousel}}
-        />
-      </div>
+      <h4>
+        When height is bigger than width, the carousel will behave in a vertical direction
+      </h4>
+      <LiveProvider
+        code={VerticalCoverCarousel}
+        scope={{React, images, ReactCoverCarousel}}
+      >
+        <LiveEditor />
+        <LiveError />
+        <LivePreview />
+      </LiveProvider>
       <hr />
       <h2>
         Flat Cover
@@ -106,12 +129,14 @@ const Application = () => {
       <h4>
         No Infinite Scroll, with heading, 2 images each side, active: 3
       </h4>
-      <div className="component-documentation">
-        <Playground
-          codeText={FlatCoversNoInfiniteScrollWithHeading}
-          scope={{React, images, ReactCoverCarousel}}
-        />
-      </div>
+      <LiveProvider
+        code={FlatCoversNoInfiniteScrollWithHeading}
+        scope={{React, images, ReactCoverCarousel}}
+      >
+        <LiveEditor />
+        <LiveError />
+        <LivePreview />
+      </LiveProvider>
       <hr />
       <h2>Flat Covers, with StyleRoot</h2>
       <h4>Infinite Scroll, 2 images each side, responsive, without rotation</h4>
