@@ -4,10 +4,11 @@
   "description": "React Stylish Cover Carousel Library",
   "main": "dist/index.js",
   "scripts": {
-    "start": "webpack-dev-server --mode development",
+    "start": "webpack-dev-server --open  --config examples/webpack.dev.config.js",
     "transpile": "babel src -d dist --copy-files",
     "watch": "npm run transpile -- --watch",
     "prepublishOnly": "npm run transpile",
+    "examples:build": "webpack --config examples/webpack.prod.config.js",
     "test": "jest"
   },
   "peerDependencies": {
@@ -49,6 +50,7 @@
     "style-loader": "^0.21.0",
     "webpack": "^4.12.2",
     "webpack-cli": "^3.0.8",
-    "webpack-dev-server": "^3.1.4"
+    "webpack-dev-server": "^3.1.4",
+    "webpack-merge": "^4.1.4"
   }
 }
