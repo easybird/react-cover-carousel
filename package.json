@@ -26,7 +26,8 @@
   "author": "easybird",
   "license": "MIT",
   "dependencies": {
-    "react-modal": "^3.5.1"
+    "react-modal": "^3.5.1",
+    "react-touch": "^0.4.4"
   },
   "devDependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.0-14",

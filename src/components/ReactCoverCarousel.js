@@ -3,8 +3,10 @@ import styles from '../styles/reactCoverCarousel.css';
 import CoverCarousel from './CoverCarousel';
 import Radium from 'radium';
 import ZoomedCover from './ZoomedCover';
-import {calculateMaxDelta, DIRECTION} from '../utils/compareXandYDirections';
-import withScrollTresholdIndication from './withScrollTresholdIndicator';
+import {DIRECTION} from '../utils/compareXandYDirections';
+import withScrollTresholdIndicator from './withScrollTresholdIndicator';
+import withDisableScrollWhenTouching from './withDisableScrollWhenTouching';
+import {Swipeable} from 'react-touch';
 
 class ReactCoverCarousel extends Component {
   constructor (props) {
@@ -60,15 +62,6 @@ class ReactCoverCarousel extends Component {
   }
 
   componentWillReceiveProps (nextProps) {
-    // console.log (
-    //   '---nextProps thresholdReached, tresholdPercentage scrolling scrollDirectionType scrollDirection',
-    //   nextProps.tresholdReached,
-    //   nextProps.tresholdPercentage,
-    //   nextProps.scrolling,
-    //   nextProps.scrollDirectionType,
-    //   nextProps.scrollDirection,
-    //   '\n'
-    // );
     if (nextProps.tresholdReached && !this.props.tresholdReached) {
       if (
         this.props.scrollDirection === DIRECTION.LEFT ||
@@ -190,11 +183,9 @@ class ReactCoverCarousel extends Component {
 
   calculateMoveInPixels = index => {
     const distance = this.centralIndex - index;
-    // console.log ('---distance', distance, this.centralIndex, index, '\n');
     const imageBase = this.state.isMobileCarousel
       ? this.imageBaseHeight
       : this.imageBaseWidth;
-    // console.log ('---imageBase', imageBase, '\n');
 
     return distance * imageBase;
   };
@@ -298,62 +289,79 @@ class ReactCoverCarousel extends Component {
     } = this.props;
     const {width, height, activeIndex, moveInPixels, isZoomedIn} = this.state;
 
-    return [
-      <div
-        ref={carouselDiv => {
-          this.carouselDiv = carouselDiv;
-        }}
-        className={styles.container}
-        style={
-          Object.keys (mediaQueries).length !== 0
-            ? mediaQueries
-            : {width: `${width}px`, height: `${height}px`}
-        }
-        onWheel={enableScroll && !isZoomedIn ? this.props.onWheel : undefined}
-        onTouchStart={this.handleTouchStart}
-        onTouchMove={this.handleTouchMove}
-        onKeyDown={this.keyDown}
-        tabIndex="-1"
+    return (
+      <Swipeable
+        onSwipeLeft={enableScroll && !isZoomedIn ? this.handleNavigateToPreviousCover: undefined}
+        onSwipeRight={enableScroll && !isZoomedIn ? this.handleNavigateToNextCover: undefined}
+        onSwipeDown={enableScroll && !isZoomedIn ? this.handleNavigateToPreviousCover: undefined}
+        onSwipeUp={enableScroll && !isZoomedIn ? this.handleNavigateToNextCover : undefined}
       >
-        <CoverCarousel
-          navigation={navigation}
-          enableHeading={enableHeading}
-          activeIndex={activeIndex}
-          transitionSpeed={transitionSpeed}
-          moveInPixels={moveInPixels}
-          activeFigureScale={activeFigureScale}
-          otherFigureRotation={otherFigureRotation}
-          otherFigureScale={otherFigureScale}
-          activeImageStyle={activeImageStyle}
-          displayQuantityOfSide={displayQuantityOfSide}
-          imageBase={
-            this.state.isMobileCarousel
-              ? this.imageBaseHeight
-              : this.imageBaseWidth
+        <div
+          ref={carouselDiv => {
+            this.carouselDiv = carouselDiv;
+          }}
+          className={styles.container}
+          style={
+            Object.keys (mediaQueries).length !== 0
+              ? mediaQueries
+              : {width: `${width}px`, height: `${height}px`}
           }
-          infiniteScroll={infiniteScroll}
-          PreviousButton={PreviousButton}
-          NextButton={NextButton}
-          onNavigateToPreviousCover={this.handleNavigateToPreviousCover}
-          onNavigateToNextCover={this.handleNavigateToNextCover}
-          onCoverClick={this.handleCoverClick}
-          isMobileCarousel={this.state.isMobileCarousel}
+          onWheel={enableScroll && !isZoomedIn ? this.props.onWheel : undefined}
+          onTouchMove={
+            enableScroll && !isZoomedIn ? this.props.onTouchMove : undefined
+          }
+          onTouchStart={
+            enableScroll && !isZoomedIn ? this.props.onTouchStart : undefined
+          }
+          onTouchEnd={
+            enableScroll && !isZoomedIn ? this.props.onTouchEnd : undefined
+          }
+          onKeyDown={this.keyDown}
+          tabIndex="-1"
         >
-          {children}
-        </CoverCarousel>
-
-        <ZoomedCover
-          Cover={
-            children && typeof activeIndex === 'number' && children[activeIndex]
-          }
-          isZoomedIn={isZoomedIn}
-          onStopZoom={() => this.setState ({isZoomedIn: false})}
-        />
-      </div>,
-    ];
+          <CoverCarousel
+            navigation={navigation}
+            enableHeading={enableHeading}
+            activeIndex={activeIndex}
+            transitionSpeed={transitionSpeed}
+            moveInPixels={moveInPixels}
+            activeFigureScale={activeFigureScale}
+            otherFigureRotation={otherFigureRotation}
+            otherFigureScale={otherFigureScale}
+            activeImageStyle={activeImageStyle}
+            displayQuantityOfSide={displayQuantityOfSide}
+            imageBase={
+              this.state.isMobileCarousel
+                ? this.imageBaseHeight
+                : this.imageBaseWidth
+            }
+            infiniteScroll={infiniteScroll}
+            PreviousButton={PreviousButton}
+            NextButton={NextButton}
+            onNavigateToPreviousCover={this.handleNavigateToPreviousCover}
+            onNavigateToNextCover={this.handleNavigateToNextCover}
+            onCoverClick={this.handleCoverClick}
+            isMobileCarousel={this.state.isMobileCarousel}
+          >
+            {children}
+          </CoverCarousel>
+          <ZoomedCover
+            Cover={
+              children &&
+                typeof activeIndex === 'number' &&
+                children[activeIndex]
+            }
+            isZoomedIn={isZoomedIn}
+            onStopZoom={() => this.setState ({isZoomedIn: false})}
+          />
+        </div>
+      </Swipeable>
+    );
   }
 }
 
 ReactCoverCarousel.displayName = 'ReactCoverCarousel';
 
-export default withScrollTresholdIndication (Radium (ReactCoverCarousel));
+export default withDisableScrollWhenTouching (
+  withScrollTresholdIndicator (Radium (ReactCoverCarousel))
+);
