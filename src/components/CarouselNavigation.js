@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import '../styles/carouselNavigation.css';
+import styles from '../styles/carouselNavigation.css';
 
 class CarouselNavigation extends Component {
   _renderPreviousButton = () => {
@@ -44,7 +44,7 @@ class CarouselNavigation extends Component {
     return (
       <button
         type="button"
-        className="button"
+        className={styles.button}
         onClick={() => onClick ()}
       >
         {fallBackButtonText}
@@ -54,7 +54,7 @@ class CarouselNavigation extends Component {
 
   render () {
     return (
-      <div className="actions">
+      <div className={styles.actions}>
         {this._renderPreviousButton ()}
         {this._renderNextButton ()}
       </div>

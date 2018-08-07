@@ -2,4 +2,4 @@ src
 examples
 .babelrc
 .gitignore
-webpack.config.js
+webpack*.js

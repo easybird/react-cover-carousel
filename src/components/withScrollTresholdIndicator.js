@@ -3,7 +3,7 @@ import {
   calculateDirectionType,
 } from '../utils/compareXandYDirections';
 
-const DEFAULT_RESET_SCROLL_TIMEOUT = 500;
+const DEFAULT_RESET_SCROLL_TIMEOUT = 300;
 const DEFAULT_TRESHOLD = 100;
 
 export default function withScrollTresholdIndication (

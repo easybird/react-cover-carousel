@@ -1,6 +1,6 @@
 import React from 'react';
 
-import '../styles/cover.css';
+import styles from '../styles/cover.css';
 import {getOpacity} from '../utils/styleHelpers';
 
 const Cover = ({
@@ -52,14 +52,14 @@ const Cover = ({
   }
 
   const cover = React.cloneElement (CoverImage, {
-    className: "cover",
+    className: styles.cover,
     draggable: false,
   });
 
   return (
     <figure
       className={
-        isActiveCover ? "figure active" : "figure"
+        isActiveCover ? `${styles.figure} ${styles.active}` : styles.figure
       }
       key={index}
       onClick={e => onCoverClick (index, cover.props['data-action'], e)}
@@ -67,7 +67,7 @@ const Cover = ({
     >
       {cover}
       {enableHeading &&
-        <div className="text">
+        <div className={styles.text}>
           {cover.props.alt}
         </div>}
     </figure>

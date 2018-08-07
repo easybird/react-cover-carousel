@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import '../styles/reactCoverCarousel.css';
+import styles from '../styles/reactCoverCarousel.css';
 import CoverCarousel from './CoverCarousel';
 import Radium from 'radium';
 import ZoomedCover from './ZoomedCover';
@@ -303,7 +303,7 @@ class ReactCoverCarousel extends Component {
         ref={carouselDiv => {
           this.carouselDiv = carouselDiv;
         }}
-        className="container"
+        className={styles.container}
         style={
           Object.keys (mediaQueries).length !== 0
             ? mediaQueries

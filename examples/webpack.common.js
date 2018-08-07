@@ -23,6 +23,9 @@ module.exports = {
   plugins: [htmlWebpackPlugin],
   resolve: {
     extensions: ['.js', '.jsx'],
+    alias: {
+      'react-cover-carousel': path.resolve(__dirname, '../lib/react-cover-carousel.js')
+    },
   },
   output: {
     filename: '[name].bundle.js',

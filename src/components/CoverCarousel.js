@@ -1,5 +1,5 @@
 import React from 'react';
-import '../styles/coverCarousel.css';
+import styles from '../styles/coverCarousel.css';
 
 import CarouselNavigation from './CarouselNavigation';
 import Cover from './Cover';
@@ -25,9 +25,9 @@ const CoverCarousel = ({
       enableHeading,
       isMobileCarousel
     }) => (
-      <div className="ReactCoverCarousel">
-        <div className="preloader" />
-        <div className="stage" style={isMobileCarousel ? { flexDirection: 'column'}: {}}>
+      <div className={styles.ReactCoverCarousel}>
+        <div className={styles.preloader} />
+        <div className={styles.stage} style={isMobileCarousel ? { flexDirection: 'column'}: {}}>
           {children.map ((child, index) => (
             <Cover
               key={index}

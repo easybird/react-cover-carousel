@@ -1,12 +1,12 @@
 import React, {Component} from 'react';
 import ReactModal from 'react-modal';
-import '../styles/zoomedCover.css';
+import styles from '../styles/zoomedCover.css';
 import {calculateMaxDelta} from '../utils/compareXandYDirections';
 import withScrollTresholdIndication from './withScrollTresholdIndicator';
 
 ReactModal.setAppElement ('body');
 
-const CLOSE_TIMEOUT_MS = 1000;
+const CLOSE_TIMEOUT_MS = 300;
 
 class ZoomedCover extends Component {
   state = {
@@ -65,16 +65,16 @@ class ZoomedCover extends Component {
         onRequestClose={() => {}}
         htmlOpenClassName="ReactModal__Html--open"
       >
-        <div className="coverContainer" style={{ opacity}} onWheel={this.props.onWheel}>
-          <a className="cover-menu" onClick={onStopZoom}>
-            <div id="menuToggle">
+        <div className={styles.coverContainer} style={{ opacity}} onWheel={this.props.onWheel}>
+          <a className={styles.coverMenu} onClick={onStopZoom}>
+            <div id={styles.menuToggle}>
               <span />
               <span />
             </div>
           </a>
           <div>
             {React.cloneElement (Cover, {
-              className: 'coverContent',
+              className: styles.coverContent,
               style: {
                 width: `${imageWidth}px`,
               },
