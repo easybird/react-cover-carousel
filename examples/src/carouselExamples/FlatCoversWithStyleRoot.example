@@ -24,10 +24,10 @@
         otherFigureScale={0.9}
         autoFocus={true}
         PreviousButton={
-            <FontAwesomeIcon style={{color: 'black', marginRight: '3em'}} icon={faArrowLeft} size="2x" />
+            <FontAwesomeIcon key='previous' style={{color: 'black', marginRight: '3em'}} icon={faArrowLeft} size="2x" />
         }
         NextButton={
-            <FontAwesomeIcon style={{color: 'black', marginLeft: '3em'}} icon={faArrowRight} size="2x" />
+            <FontAwesomeIcon key='next' style={{color: 'black', marginLeft: '3em'}} icon={faArrowRight} size="2x" />
         }
     >
         {images}

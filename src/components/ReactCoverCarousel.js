@@ -51,7 +51,6 @@ class ReactCoverCarousel extends Component {
   carouselDiv;
 
   componentDidMount () {
-    console.log('did this mount????')
     setTimeout(() => this.updateDimensions (this.props.activeImageIndex), 50); //for safari this needs to have a timeout
 
     const eventListener = window && window.addEventListener;
@@ -115,8 +114,6 @@ class ReactCoverCarousel extends Component {
     let width = this.state.width;
     let height = this.state.height;
 
-    console.log('updateDimensions!', this.carouselDiv && this.carouselDiv.offsetWidth);
-
     if (this.carouselDiv) {
       width = this.carouselDiv.offsetWidth;
       height = this.carouselDiv.offsetHeight;
@@ -124,8 +121,6 @@ class ReactCoverCarousel extends Component {
 
     this.setState ({width, height, isMobileCarousel}, () => {
       if (typeof moveToIndex === 'number') {
-        console.log('---triggerMovement!' , '\n');
-        
         this.triggerMovement (moveToIndex);
       }
     });
@@ -177,8 +172,6 @@ class ReactCoverCarousel extends Component {
     }
 
     if (!this.state.isZoomedIn) {
-      console.log('---zoom in!', '\n');
-      
       return this.setState ({isZoomedIn: true});
     }
 
@@ -247,13 +240,6 @@ class ReactCoverCarousel extends Component {
     let moveInPixels = this.getTouchMovement (e) - this.lastMovement;
     let totalmoveInPixels = this.lastMoveInPixels - moveInPixels;
     let sign = Math.abs (moveInPixels) / moveInPixels;
-    console.log (
-      '---handleTouchMove',
-      moveInPixels,
-      totalmoveInPixels,
-      sign,
-      '\n'
-    );
 
     if (
       Math.abs (totalmoveInPixels) >= this.state.isMobileCarousel
@@ -370,7 +356,5 @@ class ReactCoverCarousel extends Component {
 ReactCoverCarousel.displayName = 'ReactCoverCarousel';
 
 export default withDisableScrollWhenTouching (
-  withScrollTresholdIndicator (Radium (ReactCoverCarousel), {
-    debug: true,
-  })
+  withScrollTresholdIndicator (Radium (ReactCoverCarousel))
 );

@@ -8,6 +8,8 @@ import {faArrowLeft, faArrowRight} from '@fortawesome/free-solid-svg-icons';
 import './style.css';
 import {LiveProvider, LiveEditor, LiveError, LivePreview} from 'react-live';
 
+ReactModal.setAppElement ('body');
+
 const DefaultProps = require ('raw-loader!./carouselExamples/DefaultProps.example');
 const RotationCoversInfiniteScroll = require ('raw-loader!./carouselExamples/RotationCoversInfiniteScroll.example');
 const FlatCoversNoInfiniteScrollWithHeading = require ('raw-loader!./carouselExamples/FlatCoversNoInfiniteScrollWithHeading.example');

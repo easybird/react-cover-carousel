@@ -1,5 +1,5 @@
 # React Cover Carousel library.
-An animated Cover Carousel component with loads of options!
+An animated Cover Carousel component with loads of options! Working smoothly on desktop and on mobile.
 
 ![Demo](https://thumbs.gfycat.com/KlutzyJointIberianmole-size_restricted.gif)
 
@@ -55,8 +55,8 @@ render() {
 
 ```javascript
 static defaultProps = {
-    width: 800,
-    height: 400,
+    width: window.innerWidth / 2,
+    height: window.innerHeight / 2,
     displayQuantityOfSide: 3,
     navigation: false,
     enableHeading: false,
@@ -83,5 +83,6 @@ static defaultProps = {
 Don't hesitate to open a Pull Request, I'd be happy to include it.
 
 ## This library has to thank someone 🙇‍🙏
-This library is based on [React-Coverflow](https://github.com/andyyou/react-coverflow). Many thanks!
-But it didn't met my requirements, so I made a new library, which allows more customisation.
+This library was based on [React-Coverflow](https://github.com/andyyou/react-coverflow) 
+But it didn't met my requirements, so I made a new library, which has been heavily customised. 
+Anyway, many thanks!

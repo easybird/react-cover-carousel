@@ -130,27 +130,6 @@ export default function withScrollTresholdIndication (
         this.setState ({scrolling: true});
       }
       this.updateScrollingDistance (e);
-
-      //   console.log ('---window scrollY', window.scrollY, '\n');
-      //   console.log ('---window scrollX', window.scrollX, '\n');
-      //   console.log ('---event deltaX', e.deltaX, '\n');
-      //   console.log ('---event deltaY', e.deltaY, '\n');
-      //   console.log ('---event deltaZ', e.deltaZ, '\n');
-      //   console.log ('---event deltaMode', e.deltaMode, '\n');
-      //   console.log ('---event movementX', e.movementX, '\n');
-      //   console.log ('---event movementY', e.movementY, '\n');
-      //   console.log ('---event offsetX', e.offsetX, '\n');
-      //   console.log ('---event offsetY', e.offsetY, '\n');
-      //   console.log ('---event clientX', e.clientX, '\n');
-      //   console.log ('---event clientY', e.clientY, '\n');
-      //   console.log ('---END_____', '\n');
-
-      // if (window.scrollY === 0 && this.state.scrolling === true) {
-      //     this.setState({scrolling: false});
-      // }
-      // else if (window.scrollY !== 0 && this.state.scrolling !== true) {
-      //     this.setState({scrolling: true});
-      // }
     };
 
     render () {

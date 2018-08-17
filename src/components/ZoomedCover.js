@@ -4,7 +4,6 @@ import styles from '../styles/zoomedCover.css';
 import {calculateMaxDelta} from '../utils/compareXandYDirections';
 import withScrollTresholdIndication from './withScrollTresholdIndicator';
 ReactModal.setAppElement ('body');
-
 const CLOSE_TIMEOUT_MS = 300;
 
 class ZoomedCover extends Component {
@@ -40,7 +39,6 @@ class ZoomedCover extends Component {
   handleOnWheelEvent = e => {
     e.preventDefault ();
     const deltaXorY = calculateMaxDelta ({deltaX: e.deltaX, deltaY: e.deltaY});
-    console.log (deltaXorY);
   };
 
   handleOnTouchStart = e => {
