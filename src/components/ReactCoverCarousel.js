@@ -15,16 +15,16 @@ class ReactCoverCarousel extends Component {
     this.state = {
       activeIndex: props.activeImageIndex || 0,
       moveInPixels: 0,
-      width: props.width,
-      height: props.height,
+      width: window && window.innerWidth && window.innerWidth < props.width ? window.innerWidth/2 : props.width,
+      height: window && window.innerHeight && window.innerHeight < props.height ? window.innerHeight/2 : props.height,
       isMobileCarousel: true,
       isZoomedIn: false,
     };
   }
 
   static defaultProps = {
-    width: 800,
-    height: 400,
+    width: window && window.innerWidth ? window.innerWidth: 800,
+    height: window && window.innerheight ? window.innerheight : 400,
     displayQuantityOfSide: 3,
     navigation: false,
     enableHeading: false,
@@ -51,7 +51,8 @@ class ReactCoverCarousel extends Component {
   carouselDiv;
 
   componentDidMount () {
-    this.updateDimensions (this.props.activeImageIndex);
+    console.log('did this mount????')
+    setTimeout(() => this.updateDimensions (this.props.activeImageIndex), 50); //for safari this needs to have a timeout
 
     const eventListener = window && window.addEventListener;
 
@@ -114,6 +115,8 @@ class ReactCoverCarousel extends Component {
     let width = this.state.width;
     let height = this.state.height;
 
+    console.log('updateDimensions!', this.carouselDiv && this.carouselDiv.offsetWidth);
+
     if (this.carouselDiv) {
       width = this.carouselDiv.offsetWidth;
       height = this.carouselDiv.offsetHeight;
@@ -121,6 +124,8 @@ class ReactCoverCarousel extends Component {
 
     this.setState ({width, height, isMobileCarousel}, () => {
       if (typeof moveToIndex === 'number') {
+        console.log('---triggerMovement!' , '\n');
+        
         this.triggerMovement (moveToIndex);
       }
     });
@@ -172,6 +177,8 @@ class ReactCoverCarousel extends Component {
     }
 
     if (!this.state.isZoomedIn) {
+      console.log('---zoom in!', '\n');
+      
       return this.setState ({isZoomedIn: true});
     }
 
@@ -291,8 +298,8 @@ class ReactCoverCarousel extends Component {
 
     return (
       <Swipeable
-        onSwipeLeft={enableScroll && !isZoomedIn ? this.handleNavigateToPreviousCover: undefined}
-        onSwipeRight={enableScroll && !isZoomedIn ? this.handleNavigateToNextCover: undefined}
+        onSwipeLeft={enableScroll && !isZoomedIn ? this.handleNavigateToNextCover: undefined}
+        onSwipeRight={enableScroll && !isZoomedIn ? this.handleNavigateToPreviousCover: undefined}
         onSwipeDown={enableScroll && !isZoomedIn ? this.handleNavigateToPreviousCover: undefined}
         onSwipeUp={enableScroll && !isZoomedIn ? this.handleNavigateToNextCover : undefined}
       >
@@ -363,5 +370,7 @@ class ReactCoverCarousel extends Component {
 ReactCoverCarousel.displayName = 'ReactCoverCarousel';
 
 export default withDisableScrollWhenTouching (
-  withScrollTresholdIndicator (Radium (ReactCoverCarousel))
+  withScrollTresholdIndicator (Radium (ReactCoverCarousel), {
+    debug: true,
+  })
 );

@@ -35,7 +35,7 @@ const Cover = ({
   const transformTranslateInPixels = isMobileCarousel ? `translateY(${transformTranslate}px)`: `translateX(${transformTranslate}px)`;
   const leftSideRotation = isMobileCarousel ? `rotateX(${otherFigureRotation}deg)` : `rotateY(${otherFigureRotation}deg)`
   const rightSideRotation = isMobileCarousel ? `rotateX(-${otherFigureRotation}deg)` : `rotateY(-${otherFigureRotation}deg)`
-
+  
   // Handle transformTranslateInPixels
   if (isActiveCover) {
     style['transform'] = `${transformTranslateInPixels}  scale(${activeFigureScale}`;
@@ -54,7 +54,7 @@ const Cover = ({
   const cover = React.cloneElement (CoverImage, {
     className: styles.cover,
     draggable: false,
-  });
+  });  
 
   return (
     <figure

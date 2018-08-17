@@ -1,6 +1,6 @@
 <ReactCoverCarousel
-    width={800}
-    height={400}
+    width={window.innerWidth/2}
+    height={window.innerHeight/2}
     displayQuantityOfSide={3}
     navigation={false}
     enableHeading={false}

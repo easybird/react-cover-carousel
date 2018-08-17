@@ -36,7 +36,6 @@
     transition: transform 300ms ease-in-out;
 }
 
-
 .cover-menu:hover {
     transform: scale(1.2)
 }
@@ -98,21 +97,34 @@
 }
 
 /* Style the react modal */
-.ReactModal__Overlay {
+
+:global(.ReactModal__Overlay) {
     opacity: 0;
     transition: opacity 300ms ease-in-out;
 }
 
-.ReactModal__Overlay--after-open {
+:global(.ReactModal__Overlay--after-open) {
     opacity: 1;
 }
 
-.ReactModal__Overlay--before-close {
+:global(.ReactModal__Overlay--before-close) {
     opacity: 0;
 }
 
 /* prevent scrolling of the underlying divs */
-.ReactModal__Body--open,
-.ReactModal__Html--open {
-  overflow: hidden;
+
+:global(.ReactModal__Html--open) {
+    position: fixed;
+    /* needed for ios safari */
+    width: 100%;
+    /* needed for ios safari */
+    height: 100%;
+}
+
+:global(.ReactModal__Body--open) {
+    position: fixed;
+    /* needed for ios safari */
+    width: 100%;
+    /* needed for ios safari */
+    height: 100%;
 }
