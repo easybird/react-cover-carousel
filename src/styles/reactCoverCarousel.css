@@ -6,6 +6,14 @@
     overflow: hidden;
     touch-action: none; /* to disable scroll on div for mobile */
   }
+
+  .container img {
+    -webkit-user-drag: none;
+    -khtml-user-drag: none;
+    -moz-user-drag: none;
+    -o-user-drag: none;
+    user-drag: none;
+  }
   
   .container:focus {
     outline: none;
