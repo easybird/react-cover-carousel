@@ -9,7 +9,7 @@
     "transpile": "npm run build & webpack --config webpack.prod.config.js",
     "prepublishOnly": "npm run transpile",
     "examples:start": "webpack-dev-server --open  --config examples/webpack.dev.config.js & npm run watch",
-    "examples:build": "webpack --config examples/webpack.prod.config.js",
+    "examples:build": "npm run build && webpack --config examples/webpack.prod.config.js",
     "test": "jest"
   },
   "peerDependencies": {
