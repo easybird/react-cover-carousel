@@ -1,1 +1,3 @@
-export { default as ReactCoverCarousel } from './ReactCoverCarousel';
+import ReactCoverCarousel from './components/ReactCoverCarousel';
+
+export default ReactCoverCarousel;

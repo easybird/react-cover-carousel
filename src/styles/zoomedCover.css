@@ -1,0 +1,130 @@
+.coverContent {
+    background-color: #fefefe;
+}
+
+.coverContainer {
+    position: absolute;
+    display: flex;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    flex: 1;
+    justify-content: center;
+    align-items: center;
+    transition: all 300ms ease-in-out;
+    overflow: hidden;
+}
+
+.closeCover {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    margin: 5%;
+}
+
+/* cover menu close button */
+
+.coverMenu {
+    position: absolute;
+    top: 10%;
+    right: 10%;
+    width: 50px;
+    height: 50px;
+    cursor: pointer;
+    flex: 1;
+    transition: transform 300ms ease-in-out;
+}
+
+.cover-menu:hover {
+    transform: scale(1.2)
+}
+
+#menuToggle {
+    display: block;
+    position: relative;
+    z-index: 1;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+#menuToggle a {
+    position: absolute;
+    display: block;
+    width: 40px;
+    height: 32px;
+    cursor: pointer;
+    opacity: 0;
+    /* hide this */
+    z-index: 2;
+    /* and place it over the hamburger */
+    top: -7px;
+    left: -5px;
+    -webkit-touch-callout: none;
+}
+
+/*
+  * Just a quick hamburger
+  */
+
+#menuToggle span {
+    display: block;
+    width: 33px;
+    height: 4px;
+    margin-top: 25px;
+    position: relative;
+    background: black;
+    border-radius: 3px;
+    z-index: 1;
+}
+
+/*
+  * Transform all the slices of hamburger
+  * into a crossmark.
+  */
+
+#menuToggle span {
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 1;
+    transform: rotate(45deg);
+    background: #232323;
+}
+
+#menuToggle span:nth-last-child(1) {
+    transform: rotate(-45deg);
+}
+
+/* Style the react modal */
+
+:global(.ReactModal__Overlay) {
+    opacity: 0;
+    transition: opacity 300ms ease-in-out;
+}
+
+:global(.ReactModal__Overlay--after-open) {
+    opacity: 1;
+}
+
+:global(.ReactModal__Overlay--before-close) {
+    opacity: 0;
+}
+
+/* prevent scrolling of the underlying divs */
+
+:global(.ReactModal__Html--open) {
+    position: fixed;
+    /* needed for ios safari */
+    width: 100%;
+    /* needed for ios safari */
+    height: 100%;
+}
+
+:global(.ReactModal__Body--open) {
+    position: fixed;
+    /* needed for ios safari */
+    width: 100%;
+    /* needed for ios safari */
+    height: 100%;
+}
