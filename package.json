@@ -1,6 +1,6 @@
 {
   "name": "react-cover-carousel",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "React Stylish Cover Carousel Library",
   "main": "lib/react-cover-carousel.js",
   "scripts": {
